@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { Search, Package, CheckCircle2, Truck, Clock, MapPin, Loader2 } from 'lucide-react';
+import { Search, Package, CheckCircle2, Truck, Loader2, MapPin, Calendar, FileText, Circle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Card, CardContent } from '@/components/ui/Card';
+
 import { api } from '@/lib/api';
 import { AnimatedHero, AnimatedHeroItem, AnimatedSection } from '@/animations';
+import { PremiumCard, Timeline, StatusBadge } from '@/components/premium';
+import type { TimelineEvent } from '@/components/premium';
 import { cn } from '@/lib/utils';
 
 interface TrackingEvent {
@@ -25,7 +27,7 @@ interface TrackingResult {
   events: TrackingEvent[];
 }
 
-const statusConfig: Record<string, { label: string; icon: typeof Package; color: string }> = {
+const statusTimelineConfig: Record<string, { label: string; icon: typeof Package; color: string }> = {
   PENDING: { label: 'Order Placed', icon: Package, color: 'text-gray-400' },
   CONFIRMED: { label: 'Confirmed', icon: CheckCircle2, color: 'text-blue-500' },
   PICKED_UP: { label: 'Picked Up', icon: Truck, color: 'text-[#f59e0b]' },
@@ -33,45 +35,7 @@ const statusConfig: Record<string, { label: string; icon: typeof Package; color:
   DELIVERED: { label: 'Delivered', icon: CheckCircle2, color: 'text-green-500' },
 };
 
-function Timeline({ events }: { events: TrackingEvent[] }) {
-  return (
-    <div className="relative space-y-0">
-      {events.map((event, i) => {
-        const cfg = statusConfig[event.status] ?? { label: event.status, icon: Package, color: 'text-gray-400' };
-        const Icon = cfg.icon;
-        const isLast = i === events.length - 1;
-        return (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className="relative flex gap-6 pb-8"
-          >
-            <div className="flex flex-col items-center">
-              <div className={cn('flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 bg-white', cfg.color.replace('text-', 'border-'))}>
-                <Icon size={16} className={cfg.color} />
-              </div>
-              {!isLast && <div className="mt-1 h-full w-0.5 bg-gray-200 dark:bg-gray-700" />}
-            </div>
-            <div className={cn('pb-4', isLast ? '' : '')}>
-              <p className="font-semibold">{cfg.label}</p>
-              <p className="text-sm text-gray-500">{event.description}</p>
-              <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
-                <Clock size={12} />
-                {new Date(event.timestamp).toLocaleString('en-US', {
-                  month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
-                })}
-                <MapPin size={12} className="ml-1" />
-                {event.location}
-              </div>
-            </div>
-          </motion.div>
-        );
-      })}
-    </div>
-  );
-}
+const timelineOrder = ['PENDING', 'CONFIRMED', 'PICKED_UP', 'IN_TRANSIT', 'DELIVERED'];
 
 export default function Track() {
   const [reference, setReference] = useState('');
@@ -95,8 +59,23 @@ export default function Track() {
     }
   };
 
-  const timelineStatuses = ['PENDING', 'CONFIRMED', 'PICKED_UP', 'IN_TRANSIT', 'DELIVERED'];
-  const currentStatusIndex = result ? timelineStatuses.indexOf(result.status) : -1;
+  const currentStatusIndex = result ? timelineOrder.indexOf(result.status) : -1;
+
+  const timelineEvents: TimelineEvent[] = useMemo(() => {
+    if (!result?.events) return [];
+    return result.events.map((event) => {
+      const cfg = statusTimelineConfig[event.status] ?? { label: event.status, icon: Package, color: 'text-gray-400' };
+      return {
+        status: event.status,
+        label: cfg.label,
+        description: event.description,
+        timestamp: event.timestamp,
+        location: event.location,
+        icon: cfg.icon,
+        color: cfg.color,
+      };
+    });
+  }, [result]);
 
   return (
     <>
@@ -108,11 +87,15 @@ export default function Track() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-[#0a0e1a] py-28 lg:py-36">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
-        <div className="absolute left-1/2 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b]/5 blur-3xl" />
+        <motion.div
+          animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }}
+          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute left-1/2 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b] blur-3xl"
+        />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedHero className="mx-auto max-w-3xl text-center">
             <AnimatedHeroItem>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b]">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b] backdrop-blur-sm">
                 <Search size={14} />
                 Real-Time Tracking
               </div>
@@ -134,24 +117,26 @@ export default function Track() {
       {/* Search */}
       <AnimatedSection className="relative -mt-16">
         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
-          <Card className="border-0 bg-white shadow-lg dark:bg-gray-950">
-            <CardContent className="p-6">
-              <form onSubmit={handleSearch} className="flex gap-3">
-                <div className="relative flex-1">
-                  <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-                  <Input
-                    placeholder="Enter reference number (e.g. JJT-2024-001)"
-                    value={reference}
-                    onChange={(e) => setReference(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                <Button type="submit" disabled={isLoading || !reference.trim()} className="bg-[#0a0e1a] text-white hover:bg-[#1a1f2e]">
-                  {isLoading ? <Loader2 size={18} className="animate-spin" /> : 'Track'}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+          <PremiumCard variant="glass" hover="none" className="p-1">
+            <form onSubmit={handleSearch} className="flex gap-3 p-5">
+              <div className="relative flex-1">
+                <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                <Input
+                  placeholder="Enter reference number (e.g. JJT-2024-001)"
+                  value={reference}
+                  onChange={(e) => setReference(e.target.value)}
+                  className="pl-10 border-0 bg-gray-50 dark:bg-gray-900"
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={isLoading || !reference.trim()}
+                className="bg-[#0a0e1a] text-white hover:bg-[#1a1f2e] dark:bg-[#f59e0b] dark:text-[#0a0e1a]"
+              >
+                {isLoading ? <Loader2 size={18} className="animate-spin" /> : 'Track'}
+              </Button>
+            </form>
+          </PremiumCard>
         </div>
       </AnimatedSection>
 
@@ -174,35 +159,35 @@ export default function Track() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-8"
             >
-              {/* Status Overview */}
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {['PENDING', 'CONFIRMED', 'IN_TRANSIT', 'DELIVERED'].map((status) => {
-                  const cfg = statusConfig[status] ?? { label: status, icon: Package, color: 'text-gray-400' };
+              {/* Status overview cards */}
+              <div className="grid gap-3 sm:grid-cols-5">
+                {timelineOrder.map((status) => {
+                  const cfg = statusTimelineConfig[status] ?? { label: status, icon: Package, color: 'text-gray-400' };
                   const Icon = cfg.icon;
-                  const isReached = timelineStatuses.indexOf(status) <= currentStatusIndex;
-                  const isCurrent = timelineStatuses.indexOf(status) === currentStatusIndex;
+                  const idx = timelineOrder.indexOf(status);
+                  const isReached = idx <= currentStatusIndex;
+                  const isCurrent = idx === currentStatusIndex;
                   return (
                     <div
                       key={status}
                       className={cn(
-                        'rounded-xl border-2 p-4 text-center transition-all',
+                        'flex flex-col items-center gap-1.5 rounded-xl border-2 p-3 text-center transition-all',
                         isCurrent
-                          ? 'border-[#f59e0b] bg-[#f59e0b]/5'
+                          ? 'border-[#f59e0b] bg-[#f59e0b]/5 shadow-sm'
                           : isReached
                           ? 'border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950'
                           : 'border-gray-100 bg-gray-50 dark:border-gray-800 dark:bg-gray-900'
                       )}
                     >
                       <Icon
-                        size={24}
+                        size={20}
                         className={cn(
-                          'mx-auto',
                           isCurrent ? 'text-[#f59e0b]' : isReached ? 'text-green-500' : 'text-gray-300'
                         )}
                       />
                       <p
                         className={cn(
-                          'mt-2 text-sm font-semibold',
+                          'text-[11px] font-semibold leading-tight',
                           isCurrent
                             ? 'text-[#f59e0b]'
                             : isReached
@@ -217,42 +202,63 @@ export default function Track() {
                 })}
               </div>
 
-              {/* Shipment Info */}
-              <Card className="border-0 bg-white shadow-sm dark:bg-gray-950">
-                <CardContent className="p-6">
-                  <div className="grid gap-4 sm:grid-cols-2">
+              {/* Shipment info card */}
+              <PremiumCard variant="elevated" hover="none">
+                <div className="flex items-center gap-3 border-b border-gray-100 px-6 py-4 dark:border-gray-800">
+                  <FileText size={18} className="text-[#f59e0b]" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Reference</p>
+                    <p className="font-bold text-[#f59e0b]">{result.referenceNumber}</p>
+                  </div>
+                </div>
+                <div className="grid gap-6 p-6 sm:grid-cols-2">
+                  <div className="flex items-start gap-3">
+                    <MapPin size={16} className="mt-0.5 shrink-0 text-[#f59e0b]" />
                     <div>
-                      <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Reference</p>
-                      <p className="mt-1 font-bold text-[#f59e0b]">{result.referenceNumber}</p>
+                      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">From</p>
+                      <p className="mt-0.5 font-semibold">{result.pickupAddress}</p>
                     </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <MapPin size={16} className="mt-0.5 shrink-0 text-[#f59e0b]" />
                     <div>
-                      <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Estimated Delivery</p>
-                      <p className="mt-1 font-semibold">
+                      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">To</p>
+                      <p className="mt-0.5 font-semibold">{result.deliveryAddress}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Calendar size={16} className="mt-0.5 shrink-0 text-[#f59e0b]" />
+                    <div>
+                      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Estimated Delivery</p>
+                      <p className="mt-0.5 font-semibold">
                         {new Date(result.estimatedDelivery).toLocaleDateString('en-US', {
                           month: 'long', day: 'numeric', year: 'numeric',
                         })}
                       </p>
                     </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Circle size={16} className="mt-0.5 shrink-0 text-[#f59e0b]" />
                     <div>
-                      <p className="text-xs font-medium uppercase tracking-wider text-gray-500">From</p>
-                      <p className="mt-1 font-semibold">{result.pickupAddress}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs font-medium uppercase tracking-wider text-gray-500">To</p>
-                      <p className="mt-1 font-semibold">{result.deliveryAddress}</p>
+                      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Current Status</p>
+                      <div className="mt-0.5">
+                        <StatusBadge status={result.status} />
+                      </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </PremiumCard>
 
               {/* Timeline */}
-              {result.events && result.events.length > 0 && (
-                <Card className="border-0 bg-white shadow-sm dark:bg-gray-950">
-                  <CardContent className="p-6">
-                    <h3 className="mb-6 text-lg font-bold">Tracking Timeline</h3>
-                    <Timeline events={result.events} />
-                  </CardContent>
-                </Card>
+              {timelineEvents.length > 0 && (
+                <PremiumCard variant="elevated" hover="none">
+                  <div className="border-b border-gray-100 px-6 py-4 dark:border-gray-800">
+                    <h3 className="text-lg font-bold">Tracking Timeline</h3>
+                  </div>
+                  <div className="p-6">
+                    <Timeline events={timelineEvents} />
+                  </div>
+                </PremiumCard>
               )}
             </motion.div>
           )}

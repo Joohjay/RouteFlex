@@ -4,9 +4,18 @@ import { ArrowRight, Clock, Shield, Truck, MapPin, Award, Star, ChevronRight, Pa
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/common/SectionHeader';
+import { StatsCard, ScrollIndicator, FeatureIcon } from '@/components/premium';
 import { usePublicServices, usePublicFleet, usePublicTestimonials, usePublicBlogPosts } from '@/hooks/usePublicData';
 import { AnimatedSection, AnimatedCard, AnimatedGrid, AnimatedHero, AnimatedHeroItem, ParallaxBackground } from '@/animations';
 import { images } from '@/lib/images';
+
+const heroGlowVariants = {
+  animate: {
+    scale: [1, 1.15, 1],
+    opacity: [0.08, 0.12, 0.08],
+    transition: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
+  },
+};
 
 const features = [
   {
@@ -38,21 +47,6 @@ const stats = [
   { value: '98%', label: 'On-Time Rate', icon: TrendingUp },
 ];
 
-function AnimatedCounter({ value, label, index }: { value: string; label: string; index: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      className="text-center"
-    >
-      <div className="text-4xl font-extrabold tracking-tight text-white lg:text-5xl">{value}</div>
-      <div className="mt-1 text-sm text-white/70">{label}</div>
-    </motion.div>
-  );
-}
-
 export default function Home() {
   const { data: services, isLoading: servicesLoading } = usePublicServices();
   const { data: fleet, isLoading: fleetLoading } = usePublicFleet();
@@ -63,16 +57,21 @@ export default function Home() {
     <>
       {/* ─── Hero ─── */}
       <section className="relative min-h-[90vh] overflow-hidden bg-[#0a0e1a]">
-        <ParallaxBackground src={images.hero.main} speed={0.25} className="opacity-40" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/60 via-[#0a0e1a]/80 to-[#0a0e1a]" />
-        <div className="absolute left-1/2 top-1/3 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b]/10 blur-3xl" />
+        <ParallaxBackground src={images.hero.main} speed={0.25} className="opacity-30" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.04)_1px,transparent_1px)] bg-[size:60px_60px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/50 via-[#0a0e1a]/75 to-[#0a0e1a]" />
+        <motion.div
+          variants={heroGlowVariants}
+          animate="animate"
+          className="absolute left-1/2 top-1/4 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b] blur-3xl"
+        />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0e1a] to-transparent" />
 
         <div className="relative mx-auto flex min-h-[90vh] max-w-7xl items-center px-4 sm:px-6 lg:px-8">
           <div className="w-full">
             <AnimatedHero className="max-w-3xl">
               <AnimatedHeroItem>
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b] backdrop-blur">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b] backdrop-blur-sm">
                   <Award size={14} />
                   Trusted Logistics Partner
                 </div>
@@ -81,7 +80,7 @@ export default function Home() {
                 <h1 className="mt-8 text-5xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-6xl lg:text-7xl">
                   Freight & Logistics
                   <br />
-                  <span className="bg-gradient-to-r from-[#f59e0b] to-[#fbbf24] bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-[#f59e0b] via-[#fbbf24] to-[#f59e0b] bg-clip-text text-transparent">
                     That Moves Business
                   </span>
                 </h1>
@@ -94,13 +93,13 @@ export default function Home() {
               </AnimatedHeroItem>
               <AnimatedHeroItem>
                 <div className="mt-8 flex flex-wrap gap-4">
-                  <Button asChild size="lg" className="bg-[#f59e0b] text-[#0a0e1a] hover:bg-[#d97706]">
+                  <Button asChild size="lg" className="bg-[#f59e0b] text-[#0a0e1a] hover:bg-[#d97706] shadow-lg shadow-[#f59e0b]/25 transition-all duration-300 hover:shadow-xl hover:shadow-[#f59e0b]/30 hover:-translate-y-0.5">
                     <Link to="/book">
                       Get a Quote
-                      <ArrowRight size={18} className="ml-2" />
+                      <ArrowRight size={18} className="ml-2 transition-transform group-hover:translate-x-1" />
                     </Link>
                   </Button>
-                  <Button asChild size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                  <Button asChild size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 transition-all duration-300 hover:border-white/40">
                     <Link to="/services">Explore Services</Link>
                   </Button>
                 </div>
@@ -113,14 +112,22 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.6, duration: 0.6 }}
-              className="mt-16 grid grid-cols-2 gap-8 rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur sm:grid-cols-4 lg:mt-20"
+              className="mt-16 grid grid-cols-2 gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:grid-cols-4 lg:mt-20 lg:p-8"
             >
-              {stats.map((stat, i) => (
-                <AnimatedCounter key={stat.label} value={stat.value} label={stat.label} index={i} />
+              {stats.map((stat) => (
+                <StatsCard
+                  key={stat.label}
+                  value={stat.value}
+                  label={stat.label}
+                  icon={stat.icon}
+                  className="border-0 bg-white/5 text-white shadow-none backdrop-blur-sm"
+                />
               ))}
             </motion.div>
           </div>
         </div>
+
+        <ScrollIndicator />
       </section>
 
       {/* ─── Why Choose Us ─── */}
@@ -138,11 +145,9 @@ export default function Home() {
                 <AnimatedCard key={feature.title} className="group h-full">
                   <Card className="h-full border-0 bg-gradient-to-b from-gray-50 to-white shadow-sm dark:from-gray-900 dark:to-gray-950">
                     <CardContent className="p-6">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f59e0b]/10 text-[#f59e0b] transition-colors group-hover:bg-[#f59e0b] group-hover:text-white">
-                        <Icon size={24} />
-                      </div>
+                      <FeatureIcon icon={Icon} />
                       <h3 className="mt-4 text-lg font-semibold">{feature.title}</h3>
-                      <p className="mt-2 text-sm leading-relaxed text-gray-500 dark:text-gray-400">{feature.description}</p>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{feature.description}</p>
                     </CardContent>
                   </Card>
                 </AnimatedCard>

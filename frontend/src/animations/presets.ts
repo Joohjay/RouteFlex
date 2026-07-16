@@ -48,3 +48,30 @@ export const pagePreset = {
   exit: 'exit',
   variants: pageVariants,
 };
+
+export const statCardPreset = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: transitions.normal,
+};
+
+export const timelineItemPreset = {
+  initial: { opacity: 0, x: -20 },
+  whileInView: { opacity: 1, x: 0 },
+  viewport: { once: true },
+  transition: transitions.normal,
+};
+
+export const stepIconPulse = {
+  animate: { scale: [1, 1.08, 1] },
+  transition: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
+};
+
+export const glassHover = {
+  whileHover: {
+    backdropFilter: 'blur(12px)',
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    transition: { duration: 0.2 },
+  },
+};

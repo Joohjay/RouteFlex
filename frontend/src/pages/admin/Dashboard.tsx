@@ -16,11 +16,13 @@ import {
   Truck,
   Package,
   MapPin,
+  ArrowRight,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Loading } from '@/components/common/Loading';
 import { api } from '@/lib/api';
-import { formatDate } from '@/lib/utils';
+import { formatDate, cn } from '@/lib/utils';
+import { StatsCard } from '@/components/premium';
 import type { TransportRequest } from '@/types';
 
 interface DashboardStats {
@@ -35,6 +37,31 @@ interface DashboardStats {
   popularServices: Array<{ cargoType: string; count: number }>;
   fleetOverview: Array<{ status: string; count: number }>;
   recentRequests: TransportRequest[];
+}
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+};
+
+function RequestStatusDot({ status }: { status: string }) {
+  const colors: Record<string, string> = {
+    PENDING: 'bg-gray-400',
+    CONFIRMED: 'bg-blue-500',
+    PICKED_UP: 'bg-[#f59e0b]',
+    IN_TRANSIT: 'bg-blue-500',
+    DELIVERED: 'bg-green-500',
+    CANCELLED: 'bg-red-500',
+  };
+  return <span className={cn('h-2 w-2 rounded-full', colors[status] ?? 'bg-gray-400')} />;
 }
 
 export default function Dashboard() {
@@ -66,40 +93,43 @@ export default function Dashboard() {
     : [];
 
   return (
-    <div className="space-y-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8"
+    >
+      <motion.div variants={itemVariants}>
         <h1 className="text-3xl font-bold">Dashboard</h1>
         <p className="text-muted-foreground">Overview of your logistics operations.</p>
       </motion.div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          title="Total Requests"
+      <motion.div variants={itemVariants} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatsCard
+          label="Total Requests"
           value={stats?.totalRequests ?? 0}
           icon={FileText}
         />
-        <StatCard
-          title="New Requests"
+        <StatsCard
+          label="New Requests"
           value={stats?.newRequests ?? 0}
           icon={Package}
           trend={`${stats?.monthlyGrowth ?? 0}% vs last month`}
+          trendUp={(stats?.monthlyGrowth ?? 0) >= 0}
         />
-        <StatCard
-          title="Completed Deliveries"
+        <StatsCard
+          label="Completed Deliveries"
           value={stats?.completedDeliveries ?? 0}
           icon={CheckCircle}
         />
-        <StatCard
-          title="Monthly Requests"
+        <StatsCard
+          label="Monthly Requests"
           value={stats?.monthlyRequests ?? 0}
           icon={TrendingUp}
         />
-      </div>
+      </motion.div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <motion.div variants={itemVariants} className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Monthly Requests</CardTitle>
@@ -108,11 +138,23 @@ export default function Dashboard() {
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
-                  <Bar dataKey="requests" fill="hsl(221 83% 53%)" radius={[4, 4, 0, 0]} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="name" tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                  <YAxis allowDecimals={false} tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: '12px',
+                      border: '1px solid hsl(var(--border))',
+                      background: 'hsl(var(--card))',
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                    }}
+                  />
+                  <Bar
+                    dataKey="requests"
+                    fill="hsl(38 92% 50%)"
+                    radius={[6, 6, 0, 0]}
+                    animationDuration={800}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -125,43 +167,60 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {(stats?.popularRoutes ?? []).map((route, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <MapPin size={18} className="text-primary" />
-                    <span className="text-sm">
-                      {route.pickup} &rarr; {route.destination}
+              {(stats?.popularRoutes ?? []).length > 0 ? (
+                stats!.popularRoutes.map((route, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.08 }}
+                    className="group flex items-center justify-between rounded-xl p-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-900"
+                  >
+                    <div className="flex items-center gap-3">
+                      <MapPin size={18} className="text-[#f59e0b]" />
+                      <span className="text-sm">
+                        {route.pickup} <ArrowRight size={12} className="inline text-muted-foreground" /> {route.destination}
+                      </span>
+                    </div>
+                    <span className="rounded-full bg-[#f59e0b]/10 px-3 py-1 text-xs font-medium text-[#f59e0b]">
+                      {route.count} bookings
                     </span>
-                  </div>
-                  <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                    {route.count} bookings
-                  </span>
-                </div>
-              ))}
-              {stats?.popularRoutes.length === 0 && (
+                  </motion.div>
+                ))
+              ) : (
                 <p className="text-muted-foreground">No route data available yet.</p>
               )}
             </div>
           </CardContent>
         </Card>
-      </div>
+      </motion.div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <motion.div variants={itemVariants} className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Fleet Overview</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {(stats?.fleetOverview ?? []).map((item, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Truck size={18} className="text-primary" />
-                    <span className="text-sm capitalize">{item.status.toLowerCase().replace(/_/g, ' ')}</span>
-                  </div>
-                  <span className="font-medium">{item.count}</span>
-                </div>
-              ))}
+              {(stats?.fleetOverview ?? []).length > 0 ? (
+                stats!.fleetOverview.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.08 }}
+                    className="group flex items-center justify-between rounded-xl p-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-900"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Truck size={18} className="text-[#f59e0b]" />
+                      <span className="text-sm capitalize">{item.status.toLowerCase().replace(/_/g, ' ')}</span>
+                    </div>
+                    <span className="font-medium">{item.count}</span>
+                  </motion.div>
+                ))
+              ) : (
+                <p className="text-muted-foreground">No fleet data available.</p>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -172,50 +231,34 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {(stats?.recentRequests ?? []).slice(0, 5).map((request) => (
-                <div key={request.id} className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">{request.referenceNumber}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {request.pickupLocation} &rarr; {request.destination}
-                    </p>
-                  </div>
-                  <span className="text-xs text-muted-foreground">{formatDate(request.createdAt)}</span>
-                </div>
-              ))}
+              {(stats?.recentRequests ?? []).length > 0 ? (
+                stats!.recentRequests.slice(0, 5).map((request, index) => (
+                  <motion.div
+                    key={request.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.08 }}
+                    className="group flex items-center justify-between rounded-xl p-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-900"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <RequestStatusDot status={request.status} />
+                      <div className="min-w-0">
+                        <p className="font-medium truncate">{request.referenceNumber}</p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {request.pickupLocation} &rarr; {request.destination}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="shrink-0 text-xs text-muted-foreground">{formatDate(request.createdAt)}</span>
+                  </motion.div>
+                ))
+              ) : (
+                <p className="text-muted-foreground">No recent requests.</p>
+              )}
             </div>
           </CardContent>
         </Card>
-      </div>
-    </div>
-  );
-}
-
-function StatCard({
-  title,
-  value,
-  icon: Icon,
-  trend,
-}: {
-  title: string;
-  value: number;
-  icon: typeof FileText;
-  trend?: string;
-}) {
-  return (
-    <Card>
-      <CardContent className="pt-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm text-muted-foreground">{title}</p>
-            <p className="text-3xl font-bold">{value.toLocaleString()}</p>
-            {trend && <p className="mt-1 text-xs text-green-600">{trend}</p>}
-          </div>
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <Icon size={24} />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+      </motion.div>
+    </motion.div>
   );
 }
