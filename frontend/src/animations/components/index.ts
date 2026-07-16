@@ -17,3 +17,5 @@ export type { AnimatedTextProps, AnimatedWordProps } from './AnimatedText';
 export { AnimatedImage } from './AnimatedImage';
 export type { AnimatedImageProps } from './AnimatedImage';
 export { ParallaxBackground } from './ParallaxBackground';
+export { CursorGlow } from './CursorGlow';
+export { LoadingScreen } from './LoadingScreen';

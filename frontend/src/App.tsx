@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useThemeStore } from './stores/themeStore';
 import { useAuthStore } from './stores/authStore';
 import { AppRoutes } from './routes';
-import { MotionProvider } from './animations';
+import { MotionProvider, CursorGlow, LoadingScreen } from './animations';
 
 function App() {
   const { theme, initTheme } = useThemeStore();
@@ -18,6 +18,8 @@ function App() {
 
   return (
     <div className={theme === 'dark' ? 'dark' : ''}>
+      <LoadingScreen minDuration={2000} />
+      <CursorGlow />
       <MotionProvider>
         <AppRoutes />
       </MotionProvider>
