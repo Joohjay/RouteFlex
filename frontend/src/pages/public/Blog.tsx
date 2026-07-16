@@ -2,12 +2,13 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { Search, Calendar, ArrowRight, BookOpen, ChevronLeft, ChevronRight, Newspaper } from 'lucide-react';
+import { Search, Calendar, ArrowRight, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
 import { usePublicBlogPosts } from '@/hooks/usePublicData';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 import { AnimatedSection, AnimatedCard, AnimatedGrid, AnimatedHero, AnimatedHeroItem } from '@/animations';
+import { images } from '@/lib/images';
 import type { BlogPost } from '@/types';
 
 const POSTS_PER_PAGE = 6;
@@ -22,15 +23,9 @@ function FeaturedPost({ post }: { post: BlogPost }) {
       <Link to={`/blog/${post.slug}`} className="group block">
         <Card className="overflow-hidden border-0 shadow-sm transition-shadow hover:shadow-md">
           <div className="grid md:grid-cols-2">
-            {post.coverImage ? (
-              <div className="relative h-64 overflow-hidden md:h-full">
-                <img src={post.coverImage} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-              </div>
-            ) : (
-              <div className="flex h-64 items-center justify-center bg-gradient-to-br from-[#f59e0b]/10 to-[#0a0e1a]/10">
-                <Newspaper size={64} className="text-[#f59e0b]/30" />
-              </div>
-            )}
+            <div className="relative h-64 overflow-hidden md:h-full">
+              <img src={post.coverImage || images.blog.coverDefault} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            </div>
             <CardContent className="flex flex-col justify-center p-8">
               <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
                 {post.publishedAt && (
@@ -68,15 +63,9 @@ function PostCard({ post, index }: { post: BlogPost; index: number }) {
     <AnimatedCard index={index} className="group h-full">
       <Link to={`/blog/${post.slug}`} className="block h-full">
         <Card className="h-full overflow-hidden border-0 bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-gray-950">
-          {post.coverImage ? (
-            <div className="relative h-48 overflow-hidden">
-              <img src={post.coverImage} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-            </div>
-          ) : (
-            <div className="flex h-48 items-center justify-center bg-gradient-to-br from-[#f59e0b]/5 to-[#0a0e1a]/5">
-              <Newspaper size={40} className="text-[#f59e0b]/20" />
-            </div>
-          )}
+          <div className="relative h-48 overflow-hidden">
+            <img src={post.coverImage || images.blog.coverDefault} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          </div>
           <CardContent className="p-6">
             <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
               {post.publishedAt && (
@@ -141,7 +130,11 @@ export default function Blog() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-[#0a0e1a] py-28 lg:py-36">
+        <div className="absolute inset-0">
+          <img src={images.blog.coverDefault} alt="" className="h-full w-full object-cover opacity-25" />
+        </div>
         <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/70 to-[#0a0e1a]" />
         <div className="absolute left-1/2 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b]/5 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedHero className="mx-auto max-w-3xl text-center">

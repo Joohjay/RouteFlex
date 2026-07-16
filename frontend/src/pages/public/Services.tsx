@@ -6,6 +6,7 @@ import { usePublicServices } from '@/hooks/usePublicData';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { AnimatedSection, AnimatedCard, AnimatedGrid, AnimatedHero, AnimatedHeroItem } from '@/animations';
+import { images } from '@/lib/images';
 import type { Service } from '@/types';
 
 const serviceIcons: Record<string, typeof Package> = {
@@ -13,6 +14,15 @@ const serviceIcons: Record<string, typeof Package> = {
   'long-haul-transport': Truck,
   'heavy-haul': Package,
   'refrigerated-transport': Snowflake,
+};
+
+const serviceImages: Record<string, string> = {
+  'local-freight': images.services.freight,
+  'long-haul-transport': images.services.express,
+  'heavy-haul': images.services.heavyHaul,
+  'refrigerated-transport': images.services.warehousing,
+  'international-freight': images.services.international,
+  'courier': images.services.courier,
 };
 
 const stats = [
@@ -24,16 +34,20 @@ const stats = [
 
 function ServiceCard({ service, index }: { service: Service; index: number }) {
   const Icon = serviceIcons[service.slug] ?? Package;
+  const imgSrc = service.imageUrl || serviceImages[service.slug] || images.services.logistics;
 
   return (
     <AnimatedCard index={index} className="group h-full">
       <Link to={`/services/${service.slug}`} className="block h-full">
         <Card className="relative h-full overflow-hidden border-0 bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-gray-950">
-          <div className="absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-[#f59e0b]/5 transition-transform group-hover:scale-150" />
-          <CardContent className="p-6">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#0a0e1a] text-white transition-colors group-hover:bg-[#f59e0b]">
-              <Icon size={28} />
+          <div className="relative h-44 overflow-hidden">
+            <img src={imgSrc} alt={service.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+            <div className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f59e0b] text-white shadow-lg">
+              <Icon size={24} />
             </div>
+          </div>
+          <CardContent className="p-6">
             <h3 className="mt-5 text-xl font-bold">{service.title}</h3>
             <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
               {service.summary ?? service.description}
@@ -61,7 +75,11 @@ export default function Services() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-[#0a0e1a] py-28 lg:py-36">
+        <div className="absolute inset-0">
+          <img src={images.services.logistics} alt="" className="h-full w-full object-cover opacity-30" />
+        </div>
         <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/70 to-[#0a0e1a]" />
         <div className="absolute left-1/2 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b]/5 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedHero className="mx-auto max-w-3xl text-center">

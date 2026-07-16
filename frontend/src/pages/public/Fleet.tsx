@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 import { AnimatedSection, AnimatedCard, AnimatedGrid, AnimatedHero, AnimatedHeroItem } from '@/animations';
+import { images } from '@/lib/images';
 import { cn } from '@/lib/utils';
 import type { Fleet } from '@/types';
 
@@ -20,20 +21,24 @@ const vehicleTypeLabels: Record<string, string> = {
 
 const typeFilters = ['ALL', 'VAN', 'TRUCK', 'TRAILER', 'FLATBED', 'REFRIGERATED', 'HEAVY'] as const;
 
+const fleetImages: Record<string, string> = {
+  VAN: images.fleet.van,
+  TRUCK: images.fleet.truck,
+  TRAILER: images.fleet.trailer,
+  FLATBED: images.fleet.flatbed,
+  REFRIGERATED: images.fleet.refrigerated,
+  HEAVY: images.fleet.heavy,
+};
+
 function FleetCard({ vehicle, index }: { vehicle: Fleet; index: number }) {
+  const imgSrc = vehicle.images?.[0]?.url || fleetImages[vehicle.type] || images.fleet.truck;
   return (
     <AnimatedCard index={index} className="group h-full">
       <Card className="h-full overflow-hidden border-0 bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-gray-950">
-        {vehicle.images?.[0]?.url ? (
-          <div className="relative h-52 overflow-hidden">
-            <img src={vehicle.images[0].url} alt={vehicle.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-          </div>
-        ) : (
-          <div className="flex h-52 items-center justify-center bg-gradient-to-br from-[#f59e0b]/5 to-[#0a0e1a]/5">
-            <Truck size={56} className="text-[#f59e0b]/20" />
-          </div>
-        )}
+        <div className="relative h-52 overflow-hidden">
+          <img src={imgSrc} alt={vehicle.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+        </div>
         <CardContent className="p-6">
           <div className="flex items-start justify-between">
             <div>
@@ -124,7 +129,11 @@ export default function Fleet() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-[#0a0e1a] py-28 lg:py-36">
+        <div className="absolute inset-0">
+          <img src={images.fleet.truck} alt="" className="h-full w-full object-cover opacity-30" />
+        </div>
         <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/70 to-[#0a0e1a]" />
         <div className="absolute left-1/2 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b]/5 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedHero className="mx-auto max-w-3xl text-center">

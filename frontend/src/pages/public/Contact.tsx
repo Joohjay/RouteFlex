@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Card, CardContent } from '@/components/ui/Card';
 import { usePublicProfile } from '@/hooks/usePublicData';
 import { api } from '@/lib/api';
+import { images } from '@/lib/images';
 import { toast } from 'sonner';
 import { AnimatedHero, AnimatedHeroItem, AnimatedSection } from '@/animations';
 
@@ -84,7 +85,11 @@ export default function Contact() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-[#0a0e1a] py-28 lg:py-36">
+        <div className="absolute inset-0">
+          <img src={images.contact.office} alt="" className="h-full w-full object-cover opacity-25" />
+        </div>
         <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/70 to-[#0a0e1a]" />
         <div className="absolute left-1/2 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b]/5 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedHero className="mx-auto max-w-3xl text-center">
@@ -135,12 +140,14 @@ export default function Contact() {
                 </div>
               </div>
 
-              {/* Map placeholder */}
-              <div className="mt-10 overflow-hidden rounded-2xl border bg-gray-100 dark:bg-gray-800">
-                <div className="flex h-56 items-center justify-center">
-                  <div className="text-center">
-                    <MapPin size={32} className="mx-auto text-[#f59e0b]" />
-                    <p className="mt-2 text-sm text-gray-500">{company?.address ?? 'Map location'}</p>
+              {/* Office image */}
+              <div className="mt-10 overflow-hidden rounded-2xl border">
+                <div className="relative h-56">
+                  <img src={images.contact.office} alt="Our office" className="h-full w-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white">
+                    <MapPin size={16} className="text-[#f59e0b]" />
+                    <span className="text-sm font-medium drop-shadow">{company?.address ?? 'Our Location'}</span>
                   </div>
                 </div>
               </div>

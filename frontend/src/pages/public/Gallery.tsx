@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { Image, X, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import { usePublicGallery } from '@/hooks/usePublicData';
 import { AnimatedSection, AnimatedHero, AnimatedHeroItem } from '@/animations';
+import { images } from '@/lib/images';
 import { cn } from '@/lib/utils';
 
 const categories = ['ALL', 'FLEET', 'OPERATIONS', 'TEAM', 'FACILITY', 'EVENTS'] as const;
@@ -98,21 +99,34 @@ export default function GalleryPage() {
   const [category, setCategory] = useState<string>('ALL');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+  const fallbackGallery = useMemo(() =>
+    images.gallery.items.map((url, i) => ({
+      id: `fallback-${i}`,
+      imageUrl: url,
+      title: `JJ Transport ${['Fleet', 'Operations', 'Facility', 'Team', 'Logistics', 'Equipment'][i]}`,
+      description: undefined,
+      category: ['FLEET', 'OPERATIONS', 'FACILITY', 'TEAM', 'OPERATIONS', 'FLEET'][i],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    })), []);
+
+  const effectiveGallery = gallery && gallery.length > 0 ? gallery : fallbackGallery;
+
   const filtered = useMemo(() => {
-    if (!gallery) return [];
+    if (!effectiveGallery) return [];
     return category === 'ALL'
-      ? gallery
-      : gallery.filter((img) => img.category === category);
-  }, [gallery, category]);
+      ? effectiveGallery
+      : effectiveGallery.filter((img) => img.category === category);
+  }, [effectiveGallery, category]);
 
   const allImages = useMemo(() => {
-    if (!gallery) return [];
-    return gallery.map((img) => ({
+    if (!effectiveGallery) return [];
+    return effectiveGallery.map((img) => ({
       imageUrl: img.imageUrl,
-      title: img.title ?? undefined,
-      description: img.description ?? undefined,
+      title: (img as { title?: string }).title ?? undefined,
+      description: (img as { description?: string }).description ?? undefined,
     }));
-  }, [gallery]);
+  }, [effectiveGallery]);
 
   const openLightbox = useCallback((index: number) => setLightboxIndex(index), []);
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
@@ -136,7 +150,11 @@ export default function GalleryPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-[#0a0e1a] py-28 lg:py-36">
+        <div className="absolute inset-0">
+          <img src={images.gallery.items[0]} alt="" className="h-full w-full object-cover opacity-30" />
+        </div>
         <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/70 to-[#0a0e1a]" />
         <div className="absolute left-1/2 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b]/5 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedHero className="mx-auto max-w-3xl text-center">
