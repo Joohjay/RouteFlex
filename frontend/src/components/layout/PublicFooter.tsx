@@ -38,7 +38,7 @@ export function PublicFooter() {
               <img
                 src="/images/logo/jj-transports-logo-new-design-removebg-preview.png"
                 alt="JJ Transport"
-                className="h-14 w-auto"
+                className="h-[100px] w-auto"
               />
             </Link>
             <p className="mt-4 max-w-sm leading-relaxed text-gray-400">
