@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/common/SectionHeader';
 import { usePublicServices, usePublicFleet, usePublicTestimonials, usePublicBlogPosts } from '@/hooks/usePublicData';
-import { AnimatedSection, AnimatedCard, AnimatedGrid, AnimatedHero, AnimatedHeroItem } from '@/animations';
+import { AnimatedSection, AnimatedCard, AnimatedGrid, AnimatedHero, AnimatedHeroItem, ParallaxBackground } from '@/animations';
 import { images } from '@/lib/images';
 
 const features = [
@@ -63,9 +63,7 @@ export default function Home() {
     <>
       {/* ─── Hero ─── */}
       <section className="relative min-h-[90vh] overflow-hidden bg-[#0a0e1a]">
-        <div className="absolute inset-0">
-          <img src={images.hero.main} alt="" className="h-full w-full object-cover opacity-40" />
-        </div>
+        <ParallaxBackground src={images.hero.main} speed={0.25} className="opacity-40" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/60 via-[#0a0e1a]/80 to-[#0a0e1a]" />
         <div className="absolute left-1/2 top-1/3 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b]/10 blur-3xl" />

@@ -16,3 +16,4 @@ export { AnimatedText, AnimatedWord, AnimatedCharacter } from './AnimatedText';
 export type { AnimatedTextProps, AnimatedWordProps } from './AnimatedText';
 export { AnimatedImage } from './AnimatedImage';
 export type { AnimatedImageProps } from './AnimatedImage';
+export { ParallaxBackground } from './ParallaxBackground';

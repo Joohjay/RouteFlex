@@ -104,3 +104,24 @@ export const notificationSlide: Variants = {
     transition: { duration: duration.fast, ease: easeExit },
   },
 };
+
+export const clipReveal: Variants = {
+  hidden: { clipPath: 'inset(0 100% 0 0)' },
+  visible: {
+    clipPath: 'inset(0 0% 0 0)',
+    transition: { duration: duration.slow, ease: easeExpressive },
+  },
+};
+
+export const clipRevealVertical: Variants = {
+  hidden: { clipPath: 'inset(0 0 100% 0)' },
+  visible: {
+    clipPath: 'inset(0 0 0% 0)',
+    transition: { duration: duration.slow, ease: easeExpressive },
+  },
+};
+
+export const zoomParallax: Variants = {
+  hidden: { scale: 1.15, opacity: 0 },
+  visible: { scale: 1, opacity: 1, transition: { duration: 0.8, ease: easeExpressive } },
+};
