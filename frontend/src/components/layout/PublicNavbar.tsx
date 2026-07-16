@@ -60,13 +60,11 @@ export function PublicNavbar() {
     <header className="fixed top-0 z-50 w-full bg-[#0a0e1a]/95 shadow-sm">
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link to="/" className="group flex items-center gap-3">
-          <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-[#0f172a] dark:bg-[#f59e0b]">
-            <span className="relative z-10 text-base font-extrabold text-white dark:text-[#0f172a]">JJ</span>
-            <div className="absolute inset-0 bg-gradient-to-br from-[#f59e0b]/20 to-transparent" />
-          </div>
-          <span className="text-xl font-bold tracking-tight text-white">
-            {company?.name ?? 'JJ Transport'}
-          </span>
+          <img
+            src="/images/logo/jj-transports-logo-new-design-removebg-preview.png"
+            alt="JJ Transport"
+            className="h-10 w-auto"
+          />
         </Link>
 
         {/* Desktop nav */}

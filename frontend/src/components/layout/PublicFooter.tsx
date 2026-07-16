@@ -34,11 +34,12 @@ export function PublicFooter() {
       <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f59e0b]">
-                <span className="text-base font-extrabold text-[#0a0e1a]">JJ</span>
-              </div>
-              <span className="text-xl font-bold text-white">{company?.name ?? 'JJ Transport'}</span>
+            <Link to="/" className="inline-block">
+              <img
+                src="/images/logo/jj-transports-logo-new-design-removebg-preview.png"
+                alt="JJ Transport"
+                className="h-11 w-auto"
+              />
             </Link>
             <p className="mt-4 max-w-sm leading-relaxed text-gray-400">
               {company?.tagline ?? 'Premium freight and logistics solutions for businesses of all sizes. We deliver with precision, care, and reliability.'}
