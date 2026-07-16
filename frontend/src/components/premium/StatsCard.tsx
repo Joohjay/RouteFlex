@@ -59,7 +59,7 @@ export function StatsCard({
     >
       <div className="flex items-start justify-between">
         <div className="space-y-1">
-          <p className="text-sm text-muted-foreground">{label}</p>
+          <p className="text-sm text-[#f59e0b]/80">{label}</p>
           <p className="text-3xl font-bold tracking-tight">
             {displayValue || `${prefix}${count.toLocaleString()}${suffix}`}
           </p>

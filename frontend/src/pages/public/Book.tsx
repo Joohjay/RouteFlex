@@ -186,7 +186,7 @@ export default function Book() {
               </h1>
             </AnimatedHeroItem>
             <AnimatedHeroItem>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-400">
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#f59e0b]/80">
                 Tell us about your shipment and get an instant quote. Our team will handle the rest.
               </p>
             </AnimatedHeroItem>

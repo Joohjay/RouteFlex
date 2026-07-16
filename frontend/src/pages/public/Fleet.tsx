@@ -155,7 +155,7 @@ export default function Fleet() {
               </h1>
             </AnimatedHeroItem>
             <AnimatedHeroItem>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-400">
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#f59e0b]/80">
                 A diverse, well-maintained fleet ready to handle any cargo requirement. Every vehicle is GPS-tracked and regularly serviced.
               </p>
             </AnimatedHeroItem>

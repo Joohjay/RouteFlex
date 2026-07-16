@@ -106,7 +106,7 @@ export default function Track() {
               </h1>
             </AnimatedHeroItem>
             <AnimatedHeroItem>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-400">
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#f59e0b]/80">
                 Enter your reference number to track your shipment in real-time.
               </p>
             </AnimatedHeroItem>
