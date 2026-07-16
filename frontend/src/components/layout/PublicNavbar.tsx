@@ -63,7 +63,7 @@ export function PublicNavbar() {
           <img
             src="/images/logo/jj-transports-logo-new-design-removebg-preview.png"
             alt="JJ Transport"
-            className="h-10 w-auto"
+            className="h-12 w-auto"
           />
         </Link>
 
