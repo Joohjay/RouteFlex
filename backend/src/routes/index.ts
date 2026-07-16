@@ -1,0 +1,34 @@
+import { Router } from 'express';
+import { authRoutes } from '@/modules/auth/auth.routes.js';
+import { companyRoutes } from '@/modules/company/company.routes.js';
+import { userRoutes } from '@/modules/user/user.routes.js';
+import { fleetRoutes } from '@/modules/fleet/fleet.routes.js';
+import { serviceRoutes } from '@/modules/service/service.routes.js';
+import { galleryRoutes } from '@/modules/gallery/gallery.routes.js';
+import { blogRoutes } from '@/modules/blog/blog.routes.js';
+import { testimonialRoutes } from '@/modules/testimonial/testimonial.routes.js';
+import { transportRequestRoutes } from '@/modules/transport-request/transport-request.routes.js';
+import { quoteRoutes } from '@/modules/quote/quote.routes.js';
+import { pricingRuleRoutes } from '@/modules/pricing-rule/pricing-rule.routes.js';
+import { notificationRoutes } from '@/modules/notification/notification.routes.js';
+import { dashboardRoutes } from '@/modules/dashboard/dashboard.routes.js';
+import { settingsRoutes } from '@/modules/settings/settings.routes.js';
+import { publicRoutes } from '@/modules/company/public.routes.js';
+
+export const router = Router();
+
+router.use('/auth', authRoutes);
+router.use('/public', publicRoutes);
+router.use('/companies', companyRoutes);
+router.use('/users', userRoutes);
+router.use('/fleet', fleetRoutes);
+router.use('/services', serviceRoutes);
+router.use('/gallery', galleryRoutes);
+router.use('/blog', blogRoutes);
+router.use('/testimonials', testimonialRoutes);
+router.use('/transport-requests', transportRequestRoutes);
+router.use('/quotes', quoteRoutes);
+router.use('/pricing-rules', pricingRuleRoutes);
+router.use('/notifications', notificationRoutes);
+router.use('/dashboard', dashboardRoutes);
+router.use('/settings', settingsRoutes);

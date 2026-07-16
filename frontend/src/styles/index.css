@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 222 47% 11%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 38 92% 50%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 38 92% 95%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 222 47% 11%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222 47% 7%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 12%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 12%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 38 92% 50%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 217 91% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 222 47% 14%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 222 47% 16%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 222 47% 16%;
+    --input: 222 47% 16%;
+    --ring: 38 92% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .bg-grid {
+    background-size: 40px 40px;
+    background-image: linear-gradient(to right, rgb(0 0 0 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(0 0 0 / 0.05) 1px, transparent 1px);
+  }
+
+  .dark .bg-grid {
+    background-image: linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  }
+}
