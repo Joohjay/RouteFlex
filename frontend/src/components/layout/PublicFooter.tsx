@@ -36,9 +36,9 @@ export function PublicFooter() {
           <div className="lg:col-span-2">
             <Link to="/" className="inline-block">
               <img
-                src="/images/logo/jj-transports-logo-new-design-removebg-preview.png"
+                src="/images/logo/jj-transports-logo-truck-centerpiece-removebg-preview.png"
                 alt="JJ Transport"
-                className="h-[150px] w-auto"
+                className="h-[250px] w-auto"
               />
             </Link>
             <p className="mt-4 max-w-sm leading-relaxed text-gray-400">

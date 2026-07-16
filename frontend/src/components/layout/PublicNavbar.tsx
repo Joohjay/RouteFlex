@@ -61,9 +61,9 @@ export function PublicNavbar() {
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link to="/" className="group flex items-center gap-3">
           <img
-            src="/images/logo/jj-transports-logo-new-design-removebg-preview.png"
+            src="/images/logo/jj-transports-logo-truck-centerpiece-removebg-preview.png"
             alt="JJ Transport"
-            className="h-[100px] w-auto"
+            className="h-[150px] w-auto"
           />
         </Link>
 

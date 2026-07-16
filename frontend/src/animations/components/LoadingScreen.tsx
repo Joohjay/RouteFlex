@@ -37,9 +37,9 @@ export function LoadingScreen({ minDuration = 1500 }: LoadingScreenProps) {
               className="flex flex-col items-center"
             >
               <img
-                src="/images/logo/jj-transports-logo-new-design-removebg-preview.png"
+                src="/images/logo/jj-transports-logo-truck-centerpiece-removebg-preview.png"
                 alt="JJ Transport"
-                className="h-24 w-auto"
+                className="h-32 w-auto"
               />
             </motion.div>
 
