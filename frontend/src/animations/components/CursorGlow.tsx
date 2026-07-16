@@ -5,7 +5,7 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 export function CursorGlow() {
   const prefersReducedMotion = useReducedMotion();
   const [isVisible, setIsVisible] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(true);
+  const [isTouchDevice, setIsTouchDevice] = useState<boolean | null>(null);
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
@@ -28,7 +28,7 @@ export function CursorGlow() {
   }, []);
 
   useEffect(() => {
-    if (isTouchDevice || prefersReducedMotion) return;
+    if (isTouchDevice !== false || prefersReducedMotion) return;
     window.addEventListener('mousemove', handleMove);
     document.addEventListener('mouseleave', handleLeave);
     return () => {
@@ -37,7 +37,7 @@ export function CursorGlow() {
     };
   }, [isTouchDevice, prefersReducedMotion, handleMove, handleLeave]);
 
-  if (isTouchDevice || prefersReducedMotion) return null;
+  if (isTouchDevice !== false || prefersReducedMotion) return null;
 
   return (
     <motion.div
@@ -51,11 +51,19 @@ export function CursorGlow() {
     >
       <motion.div
         animate={{
-          opacity: isVisible ? 1 : 0,
-          scale: isVisible ? 1 : 0.5,
+          opacity: isVisible ? 0.6 : 0,
+          scale: isVisible ? 1 : 0.3,
         }}
-        transition={{ duration: 0.3 }}
-        className="h-64 w-64 rounded-full bg-[#f59e0b]/8 blur-3xl"
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        className="h-80 w-80 rounded-full bg-[#f59e0b]/10 blur-[80px]"
+      />
+      <motion.div
+        animate={{
+          opacity: isVisible ? 0.5 : 0,
+          scale: isVisible ? 1 : 0.3,
+        }}
+        transition={{ duration: 0.3, ease: 'easeOut', delay: 0.05 }}
+        className="absolute inset-0 h-40 w-40 rounded-full bg-[#f59e0b]/20 blur-[40px]"
       />
     </motion.div>
   );
