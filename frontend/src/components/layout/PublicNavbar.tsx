@@ -68,7 +68,7 @@ export function PublicNavbar() {
       className={cn(
         'fixed top-0 z-50 w-full transition-all duration-300',
         scrolled
-          ? 'bg-white/80 shadow-sm backdrop-blur-xl dark:bg-[#0a0e1a]/80'
+          ? 'bg-[#0a0e1a]/90 shadow-sm backdrop-blur-xl'
           : 'bg-transparent'
       )}
     >
@@ -78,10 +78,7 @@ export function PublicNavbar() {
             <span className="relative z-10 text-base font-extrabold text-white dark:text-[#0f172a]">JJ</span>
             <div className="absolute inset-0 bg-gradient-to-br from-[#f59e0b]/20 to-transparent" />
           </div>
-          <span className={cn(
-            'text-xl font-bold tracking-tight transition-colors',
-            scrolled ? 'text-[#0f172a] dark:text-white' : 'text-white'
-          )}>
+          <span className="text-xl font-bold tracking-tight text-white">
             {company?.name ?? 'JJ Transport'}
           </span>
         </Link>
@@ -95,11 +92,8 @@ export function PublicNavbar() {
                 key={link.href}
                 to={link.href}
                 className={cn(
-                  'relative rounded-lg px-4 py-2 text-sm font-medium transition-colors',
-                  scrolled
-                    ? 'text-gray-600 hover:text-[#0f172a] dark:text-gray-300 dark:hover:text-white'
-                    : 'text-white/80 hover:text-white',
-                  isActive && (scrolled ? 'text-[#0f172a] dark:text-[#f59e0b]' : 'text-[#f59e0b]')
+                  'relative rounded-lg px-4 py-2 text-sm font-medium transition-colors text-white/80 hover:text-white',
+                  isActive && 'text-[#f59e0b]'
                 )}
               >
                 {link.label}
@@ -119,10 +113,7 @@ export function PublicNavbar() {
           {company?.phone && (
             <a
               href={`tel:${company.phone}`}
-              className={cn(
-                'flex items-center gap-2 text-sm font-medium transition-colors',
-                scrolled ? 'text-gray-600 hover:text-[#0f172a] dark:text-gray-300' : 'text-white/80 hover:text-white'
-              )}
+              className="flex items-center gap-2 text-sm font-medium text-white/80 transition-colors hover:text-white"
             >
               <Phone size={15} />
               {company.phone}
@@ -134,7 +125,7 @@ export function PublicNavbar() {
               <Link to="/admin">Dashboard</Link>
             </Button>
           ) : (
-            <Button asChild variant="ghost" size="sm" className={cn(scrolled ? '' : 'text-white hover:text-white hover:bg-white/10')}>
+            <Button asChild variant="ghost" size="sm" className="text-white hover:text-white hover:bg-white/10">
               <Link to="/login">Login</Link>
             </Button>
           )}
@@ -151,10 +142,7 @@ export function PublicNavbar() {
           <ThemeToggle />
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={cn(
-              'relative z-50 rounded-lg p-2 transition-colors',
-              isOpen ? 'text-white' : scrolled ? 'text-[#0f172a] dark:text-white' : 'text-white'
-            )}
+            className="relative z-50 rounded-lg p-2 text-white transition-colors"
             aria-label="Toggle menu"
           >
             <motion.div
