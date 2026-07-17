@@ -77,8 +77,8 @@ function StepIcon({ step, serviceName, weight }: { step: number; serviceName?: s
   const label = current!.label;
   const value = current!.value;
   return (
-    <div className="flex items-center gap-3 rounded-lg bg-[#f59e0b]/5 p-3 text-sm">
-      <Icon size={18} className="shrink-0 text-[#f59e0b]" />
+    <div className="flex items-center gap-3 rounded-lg bg-[#C29A4A]/5 p-3 text-sm">
+      <Icon size={18} className="shrink-0 text-[#C29A4A]" />
       <div>
         <span className="text-muted-foreground">{label}</span>
         {value && <p className="font-medium">{value}</p>}
@@ -165,28 +165,27 @@ export default function Book() {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[#0a0e1a] py-28 lg:py-36">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
+      <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
         <motion.div
-          animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }}
+          animate={{ scale: [1, 1.1, 1], opacity: [0.03, 0.06, 0.03] }}
           transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute left-1/2 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b] blur-3xl"
+          className="absolute left-1/2 top-1/3 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C29A4A]/10 blur-3xl"
         />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedHero className="mx-auto max-w-3xl text-center">
             <AnimatedHeroItem>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b] backdrop-blur-sm">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#C29A4A]/20 bg-[#C29A4A]/10 px-4 py-1.5 text-sm font-medium text-[#C29A4A] backdrop-blur-sm">
                 <Truck size={14} />
                 Book Transport
               </div>
             </AnimatedHeroItem>
             <AnimatedHeroItem>
-              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
+              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl font-heading">
                 Book Transport
               </h1>
             </AnimatedHeroItem>
             <AnimatedHeroItem>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#f59e0b]/80">
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-400">
                 Tell us about your shipment and get an instant quote. Our team will handle the rest.
               </p>
             </AnimatedHeroItem>
@@ -237,7 +236,7 @@ export default function Book() {
                                   className={cn(
                                     'relative flex cursor-pointer items-start gap-3 rounded-xl border-2 p-5 transition-all',
                                     isSelected
-                                      ? 'border-[#f59e0b] bg-[#f59e0b]/5 shadow-sm'
+                                      ? 'border-[#C29A4A] bg-[#C29A4A]/5 shadow-sm'
                                       : 'border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600'
                                   )}
                                 >
@@ -245,11 +244,11 @@ export default function Book() {
                                     type="radio"
                                     {...register('serviceId')}
                                     value={service.id}
-                                    className="mt-1 accent-[#f59e0b]"
+                                    className="mt-1 accent-[#C29A4A]"
                                   />
                                   <div className="flex-1">
                                     <div className="flex items-center gap-2">
-                                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f59e0b]/10 text-[#f59e0b]">
+                                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#C29A4A]/10 text-[#C29A4A]">
                                         <Truck size={16} />
                                       </div>
                                       <p className="font-semibold">{service.title}</p>
@@ -264,7 +263,7 @@ export default function Book() {
                                       animate={{ scale: 1 }}
                                       className="absolute right-3 top-3"
                                     >
-                                      <Check size={16} className="text-[#f59e0b]" />
+                                      <Check size={16} className="text-[#C29A4A]" />
                                     </motion.div>
                                   )}
                                 </label>
@@ -281,7 +280,7 @@ export default function Book() {
                         <div className="grid gap-6 sm:grid-cols-2">
                           <div className="space-y-2">
                             <label className="flex items-center gap-2 text-sm font-medium">
-                              <MapPin size={14} className="text-[#f59e0b]" />
+                              <MapPin size={14} className="text-[#C29A4A]" />
                               Pickup Address
                             </label>
                             <Input {...register('pickupAddress')} placeholder="123 Main St, City" />
@@ -289,7 +288,7 @@ export default function Book() {
                           </div>
                           <div className="space-y-2">
                             <label className="flex items-center gap-2 text-sm font-medium">
-                              <MapPin size={14} className="text-[#f59e0b]" />
+                              <MapPin size={14} className="text-[#C29A4A]" />
                               Delivery Address
                             </label>
                             <Input {...register('deliveryAddress')} placeholder="456 Oak Ave, City" />
@@ -300,7 +299,7 @@ export default function Book() {
                         <div className="grid gap-6 sm:grid-cols-2">
                           <div className="space-y-2">
                             <label className="flex items-center gap-2 text-sm font-medium">
-                              <Calendar size={14} className="text-[#f59e0b]" />
+                              <Calendar size={14} className="text-[#C29A4A]" />
                               Pickup Date
                             </label>
                             <Input {...register('pickupDate')} type="date" />
@@ -308,7 +307,7 @@ export default function Book() {
                           </div>
                           <div className="space-y-2">
                             <label className="flex items-center gap-2 text-sm font-medium">
-                              <Calendar size={14} className="text-[#f59e0b]" />
+                              <Calendar size={14} className="text-[#C29A4A]" />
                               Delivery Date
                             </label>
                             <Input {...register('deliveryDate')} type="date" />
@@ -318,7 +317,7 @@ export default function Book() {
 
                         <div className="space-y-2">
                           <label className="flex items-center gap-2 text-sm font-medium">
-                            <FileText size={14} className="text-[#f59e0b]" />
+                            <FileText size={14} className="text-[#C29A4A]" />
                             Cargo Description
                           </label>
                           <Textarea {...register('cargoDescription')} rows={3} placeholder="Describe the items you are shipping..." />
@@ -328,7 +327,7 @@ export default function Book() {
                         <div className="grid gap-6 sm:grid-cols-2">
                           <div className="space-y-2">
                             <label className="flex items-center gap-2 text-sm font-medium">
-                              <Weight size={14} className="text-[#f59e0b]" />
+                              <Weight size={14} className="text-[#C29A4A]" />
                               Estimated Weight (lbs)
                             </label>
                             <Input {...register('weight')} type="number" placeholder="1000" />
@@ -352,7 +351,7 @@ export default function Book() {
                         <div className="grid gap-6 sm:grid-cols-2">
                           <div className="space-y-2">
                             <label className="flex items-center gap-2 text-sm font-medium">
-                              <User size={14} className="text-[#f59e0b]" />
+                              <User size={14} className="text-[#C29A4A]" />
                               First Name
                             </label>
                             <Input {...register('firstName')} placeholder="John" />
@@ -360,7 +359,7 @@ export default function Book() {
                           </div>
                           <div className="space-y-2">
                             <label className="flex items-center gap-2 text-sm font-medium">
-                              <User size={14} className="text-[#f59e0b]" />
+                              <User size={14} className="text-[#C29A4A]" />
                               Last Name
                             </label>
                             <Input {...register('lastName')} placeholder="Smith" />
@@ -371,7 +370,7 @@ export default function Book() {
                         <div className="grid gap-6 sm:grid-cols-2">
                           <div className="space-y-2">
                             <label className="flex items-center gap-2 text-sm font-medium">
-                              <Mail size={14} className="text-[#f59e0b]" />
+                              <Mail size={14} className="text-[#C29A4A]" />
                               Email
                             </label>
                             <Input {...register('email')} type="email" placeholder="john@example.com" />
@@ -379,7 +378,7 @@ export default function Book() {
                           </div>
                           <div className="space-y-2">
                             <label className="flex items-center gap-2 text-sm font-medium">
-                              <Phone size={14} className="text-[#f59e0b]" />
+                              <Phone size={14} className="text-[#C29A4A]" />
                               Phone
                             </label>
                             <Input {...register('phone')} type="tel" placeholder="+1 (555) 123-4567" />
@@ -389,7 +388,7 @@ export default function Book() {
 
                         <div className="space-y-2">
                           <label className="flex items-center gap-2 text-sm font-medium">
-                            <Building2 size={14} className="text-[#f59e0b]" />
+                            <Building2 size={14} className="text-[#C29A4A]" />
                             Company (optional)
                           </label>
                           <Input {...register('company')} placeholder="Your Company LLC" />
@@ -403,11 +402,11 @@ export default function Book() {
                           initial={{ scale: 0.95, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           transition={{ type: 'spring', stiffness: 200 }}
-                          className="overflow-hidden rounded-2xl border border-[#f59e0b]/20 bg-gradient-to-br from-[#f59e0b]/5 to-[#f59e0b]/10 p-6"
+                          className="overflow-hidden rounded-2xl border border-[#C29A4A]/20 bg-gradient-to-br from-[#C29A4A]/5 to-[#C29A4A]/10 p-6"
                         >
                           <div className="flex items-center gap-4">
-                            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#f59e0b]">
-                              <Truck size={28} className="text-[#0a0e1a]" />
+                            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#C29A4A]">
+                              <Truck size={28} className="text-[#163A5F]" />
                             </div>
                             <div>
                               <p className="text-sm font-medium text-muted-foreground">Estimated Quote</p>
@@ -415,7 +414,7 @@ export default function Book() {
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 }}
-                                className="text-4xl font-extrabold text-[#f59e0b]"
+                                className="text-4xl font-extrabold text-[#C29A4A]"
                               >
                                 {estimate}
                               </motion.p>
@@ -474,7 +473,7 @@ export default function Book() {
                         <ArrowRight size={16} className="ml-2" />
                       </Button>
                     ) : (
-                      <Button type="submit" disabled={isSubmitting} className="bg-[#f59e0b] text-[#0a0e1a] hover:bg-[#d97706] shadow-lg shadow-[#f59e0b]/25">
+                      <Button type="submit" disabled={isSubmitting} className="bg-[#C29A4A] text-[#163A5F] hover:bg-[#B8863A] shadow-lg shadow-[#C29A4A]/25">
                         {isSubmitting ? (
                           <Loader2 size={18} className="mr-2 animate-spin" />
                         ) : (

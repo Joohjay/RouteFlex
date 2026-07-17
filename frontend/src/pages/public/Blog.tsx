@@ -46,7 +46,7 @@ function FeaturedPost({ post }: { post: BlogPost }) {
               </div>
               <h2 className="mt-3 text-2xl font-bold leading-snug md:text-3xl">{post.title}</h2>
               <p className="mt-3 line-clamp-3 text-gray-500 dark:text-gray-400">{post.excerpt ?? post.content}</p>
-              <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#f59e0b]">
+              <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#C29A4A]">
                 Read Article
                 <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
               </span>
@@ -85,7 +85,7 @@ function PostCard({ post, index }: { post: BlogPost; index: number }) {
             <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
               {post.excerpt ?? post.content}
             </p>
-            <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#f59e0b]">
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#C29A4A]">
               Read more
               <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
             </span>
@@ -129,23 +129,22 @@ export default function Blog() {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[#0a0e1a] py-28 lg:py-36">
+      <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
         <div className="absolute inset-0">
-          <img src={images.blog.coverDefault} alt="" className="h-full w-full object-cover opacity-25" />
+          <img src={images.blog.coverDefault} alt="" className="h-full w-full object-cover opacity-20" />
         </div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/70 to-[#0a0e1a]" />
-        <div className="absolute left-1/2 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b]/5 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#163A5F]/60 to-[#163A5F]" />
+        <div className="absolute left-1/2 top-1/3 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C29A4A]/5 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedHero className="mx-auto max-w-3xl text-center">
             <AnimatedHeroItem>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b]">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#C29A4A]/20 bg-[#C29A4A]/10 px-4 py-1.5 text-sm font-medium text-[#C29A4A]">
                 <BookOpen size={14} />
                 Insights & Updates
               </div>
             </AnimatedHeroItem>
             <AnimatedHeroItem>
-              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
+              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl font-heading">
                 Our Blog
               </h1>
             </AnimatedHeroItem>

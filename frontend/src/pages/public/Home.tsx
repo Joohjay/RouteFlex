@@ -5,6 +5,23 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/common/SectionHeader';
 import { StatsCard, ScrollIndicator, FeatureIcon } from '@/components/premium';
+const serviceImages: Record<string, string> = {
+  'local-freight': images.services.freight,
+  'long-haul-transport': images.services.express,
+  'heavy-haul': images.services.heavyHaul,
+  'refrigerated-transport': images.services.warehousing,
+  'international-freight': images.services.international,
+  'courier': images.services.courier,
+};
+
+const fleetImages: Record<string, readonly string[]> = {
+  VAN: images.fleet.van,
+  TRUCK: images.fleet.truck,
+  TRAILER: images.fleet.trailer,
+  FLATBED: images.fleet.flatbed,
+  REFRIGERATED: images.fleet.refrigerated,
+  HEAVY: images.fleet.heavy,
+};
 import { usePublicServices, usePublicFleet, usePublicTestimonials, usePublicBlogPosts } from '@/hooks/usePublicData';
 import { AnimatedSection, AnimatedCard, AnimatedGrid, AnimatedHero, AnimatedHeroItem, ParallaxBackground } from '@/animations';
 import { images } from '@/lib/images';
@@ -41,9 +58,9 @@ const features = [
 ];
 
 const stats = [
-  { value: '15+', label: 'Years Experience', icon: Award },
-  { value: '10K+', label: 'Deliveries Completed', icon: Package },
-  { value: '500+', label: 'Business Clients', icon: Star },
+  { value: '5+', label: 'Years Experience', icon: Award },
+  { value: '200+', label: 'Deliveries Completed', icon: Package },
+  { value: '150+', label: 'Business Clients', icon: Star },
   { value: '98%', label: 'On-Time Rate', icon: TrendingUp },
 ];
 
@@ -56,31 +73,30 @@ export default function Home() {
   return (
     <>
       {/* ─── Hero ─── */}
-      <section className="relative min-h-[90vh] overflow-hidden bg-[#0a0e1a]">
-        <ParallaxBackground src={images.hero.main} speed={0.25} className="opacity-30" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.04)_1px,transparent_1px)] bg-[size:60px_60px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/50 via-[#0a0e1a]/75 to-[#0a0e1a]" />
+      <section className="relative min-h-[90vh] overflow-hidden" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
+        <ParallaxBackground src={images.hero.main} speed={0.25} className="opacity-20" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#163A5F]/40 via-[#163A5F]/65 to-[#163A5F]" />
         <motion.div
           variants={heroGlowVariants}
           animate="animate"
-          className="absolute left-1/2 top-1/4 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b] blur-3xl"
+          className="absolute left-1/2 top-1/4 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C29A4A]/10 blur-3xl"
         />
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0e1a] to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#163A5F] to-transparent" />
 
         <div className="relative mx-auto flex min-h-[90vh] max-w-7xl items-center px-4 sm:px-6 lg:px-8">
           <div className="w-full">
             <AnimatedHero className="max-w-3xl">
               <AnimatedHeroItem>
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b] backdrop-blur-sm">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#C29A4A]/20 bg-[#C29A4A]/10 px-4 py-1.5 text-sm font-medium text-[#C29A4A] backdrop-blur-sm">
                   <Award size={14} />
                   Trusted Logistics Partner
                 </div>
               </AnimatedHeroItem>
               <AnimatedHeroItem>
-                <h1 className="mt-8 text-5xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-6xl lg:text-7xl">
+                <h1 className="mt-8 text-5xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-6xl lg:text-7xl font-heading">
                   Freight & Logistics
                   <br />
-                  <span className="bg-gradient-to-r from-[#f59e0b] via-[#fbbf24] to-[#f59e0b] bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-b from-white via-[#F5F2EB] to-[#D8B46A] bg-clip-text text-transparent">
                     That Moves Business
                   </span>
                 </h1>
@@ -93,7 +109,7 @@ export default function Home() {
               </AnimatedHeroItem>
               <AnimatedHeroItem>
                 <div className="mt-8 flex flex-wrap gap-4">
-                  <Button asChild size="lg" className="bg-[#f59e0b] text-[#0a0e1a] hover:bg-[#d97706] shadow-lg shadow-[#f59e0b]/25 transition-all duration-300 hover:shadow-xl hover:shadow-[#f59e0b]/30 hover:-translate-y-0.5">
+                  <Button asChild size="lg" className="bg-[#C29A4A] text-[#163A5F] hover:bg-[#B8863A] shadow-lg shadow-[#C29A4A]/25 transition-all duration-300 hover:shadow-xl hover:shadow-[#C29A4A]/30 hover:-translate-y-0.5">
                     <Link to="/book">
                       Get a Quote
                       <ArrowRight size={18} className="ml-2 transition-transform group-hover:translate-x-1" />
@@ -177,26 +193,20 @@ export default function Home() {
                 <AnimatedCard key={service.id} index={i} className="group h-full">
                   <Link to={`/services/${service.slug}`} className="block h-full">
                     <Card className="h-full overflow-hidden border-0 shadow-sm transition-shadow hover:shadow-md">
-                      {service.imageUrl ? (
-                        <div className="relative h-48 overflow-hidden">
-                          <img
-                            src={service.imageUrl}
-                            alt={service.title}
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                        </div>
-                      ) : (
-                        <div className="flex h-48 items-center justify-center bg-gradient-to-br from-[#f59e0b]/5 to-[#0a0e1a]/5">
-                          <Truck size={48} className="text-[#f59e0b]/30" />
-                        </div>
-                      )}
+                      <div className="relative h-48 overflow-hidden">
+                        <img
+                          src={service.imageUrl || serviceImages[service.slug] || images.services.logistics}
+                          alt={service.title}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                      </div>
                       <CardContent className="p-6">
                         <h3 className="text-lg font-semibold">{service.title}</h3>
                         <p className="mt-2 line-clamp-2 text-sm text-gray-500 dark:text-gray-400">
                           {service.summary ?? service.description}
                         </p>
-                        <span className="mt-4 inline-flex items-center text-sm font-medium text-[#f59e0b]">
+                        <span className="mt-4 inline-flex items-center text-sm font-medium text-[#C29A4A]">
                           Learn more <ChevronRight size={16} className="ml-0.5 transition-transform group-hover:translate-x-0.5" />
                         </span>
                       </CardContent>
@@ -235,20 +245,19 @@ export default function Home() {
             <AnimatedGrid className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {(fleet ?? []).slice(0, 4).map((vehicle, i) => (
                 <AnimatedCard key={vehicle.id} index={i} className="group h-full">
-                  <Card className="h-full border-0 bg-gradient-to-b from-gray-50 to-white shadow-sm dark:from-gray-900 dark:to-gray-950">
-                    <CardContent className="p-6">
-                      {vehicle.images?.[0]?.url ? (
-                        <div className="relative mb-4 h-36 overflow-hidden rounded-lg">
-                          <img src={vehicle.images[0].url} alt={vehicle.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                        </div>
-                      ) : (
-                        <div className="mb-4 flex h-36 items-center justify-center rounded-lg bg-gradient-to-br from-[#f59e0b]/5 to-[#0a0e1a]/5">
-                          <Truck size={40} className="text-[#f59e0b]/30" />
-                        </div>
-                      )}
+                  <Card className="h-full overflow-hidden border-0 shadow-sm transition-shadow hover:shadow-md">
+                    <div className="relative h-36 overflow-hidden">
+                      <img
+                        src={vehicle.images?.[0]?.url || vehicle.id ? (fleetImages[vehicle.type]?.[vehicle.id.charCodeAt(0) % 5] ?? images.fleet.truck[0]) : images.fleet.truck[0]}
+                        alt={vehicle.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                    </div>
+                    <CardContent className="p-5">
                       <div className="flex items-center justify-between">
                         <h3 className="text-lg font-semibold">{vehicle.name}</h3>
-                        <span className="rounded-full bg-[#f59e0b]/10 px-2.5 py-0.5 text-xs font-medium text-[#f59e0b]">
+                        <span className="rounded-full bg-[#C29A4A]/10 px-2.5 py-0.5 text-xs font-medium text-[#C29A4A]">
                           {(vehicle.capacityKg / 1000).toFixed(0)}T
                         </span>
                       </div>
@@ -295,16 +304,16 @@ export default function Home() {
               {(testimonials ?? []).slice(0, 3).map((testimonial, i) => (
                 <AnimatedCard key={testimonial.id} index={i} className="h-full">
                   <Card className="relative h-full border-0 bg-white shadow-sm dark:bg-gray-900">
-                    <div className="absolute right-6 top-6 text-5xl font-serif text-[#f59e0b]/20 leading-none">&ldquo;</div>
+                    <div className="absolute right-6 top-6 text-5xl font-serif text-[#C29A4A]/20 leading-none">&ldquo;</div>
                     <CardContent className="p-6">
                       <div className="flex gap-0.5">
                         {Array.from({ length: testimonial.rating }).map((_, i) => (
-                          <Star key={i} size={16} className="fill-[#f59e0b] text-[#f59e0b]" />
+                          <Star key={i} size={16} className="fill-[#C29A4A] text-[#C29A4A]" />
                         ))}
                       </div>
                       <p className="mt-4 leading-relaxed text-gray-600 dark:text-gray-300">&ldquo;{testimonial.content}&rdquo;</p>
                       <div className="mt-6 flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f59e0b]/10 text-sm font-bold text-[#f59e0b]">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#C29A4A]/10 text-sm font-bold text-[#C29A4A]">
                           {testimonial.author.charAt(0)}
                         </div>
                         <div>
@@ -356,7 +365,7 @@ export default function Home() {
                         </div>
                         <h3 className="mt-2 text-lg font-semibold leading-snug">{post.title}</h3>
                         <p className="mt-2 line-clamp-2 text-sm text-gray-500 dark:text-gray-400">{post.excerpt ?? post.content}</p>
-                        <span className="mt-4 inline-flex items-center text-sm font-medium text-[#f59e0b]">
+                        <span className="mt-4 inline-flex items-center text-sm font-medium text-[#C29A4A]">
                           Read more <ChevronRight size={16} className="ml-0.5 transition-transform group-hover:translate-x-0.5" />
                         </span>
                       </CardContent>
@@ -378,31 +387,30 @@ export default function Home() {
       )}
 
       {/* ─── CTA ─── */}
-      <AnimatedSection className="relative overflow-hidden bg-[#0a0e1a] py-24">
+      <AnimatedSection className="relative overflow-hidden py-24" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
         <div className="absolute inset-0">
-          <img src={images.cta.background} alt="" className="h-full w-full object-cover opacity-30" />
+          <img src={images.cta.background} alt="" className="h-full w-full object-cover opacity-20" />
         </div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:40px_40px]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0e1a]/90 to-[#0a0e1a]/70" />
-        <div className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b]/5 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#163A5F]/90 to-[#163A5F]/70" />
+        <div className="absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C29A4A]/5 blur-3xl" />
         <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b]">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#C29A4A]/20 bg-[#C29A4A]/10 px-4 py-1.5 text-sm font-medium text-[#C29A4A]">
               <Award size={14} />
               Ready to Get Started?
             </div>
-            <h2 className="mt-6 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+            <h2 className="mt-6 text-4xl font-extrabold tracking-tight text-white sm:text-5xl font-heading">
               Ready to Move Your Cargo?
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-lg text-gray-400">
               Get an instant estimate and book your transport in minutes. Our team is ready to help.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <Button asChild size="lg" className="bg-[#f59e0b] text-[#0a0e1a] hover:bg-[#d97706]">
+              <Button asChild size="lg" className="bg-[#C29A4A] text-[#163A5F] hover:bg-[#B8863A]">
                 <Link to="/book">
                   Book Transport
                   <ArrowRight size={18} className="ml-2" />

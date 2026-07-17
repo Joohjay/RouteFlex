@@ -30,8 +30,8 @@ interface TrackingResult {
 const statusTimelineConfig: Record<string, { label: string; icon: typeof Package; color: string }> = {
   PENDING: { label: 'Order Placed', icon: Package, color: 'text-gray-400' },
   CONFIRMED: { label: 'Confirmed', icon: CheckCircle2, color: 'text-blue-500' },
-  PICKED_UP: { label: 'Picked Up', icon: Truck, color: 'text-[#f59e0b]' },
-  IN_TRANSIT: { label: 'In Transit', icon: Truck, color: 'text-[#f59e0b]' },
+  PICKED_UP: { label: 'Picked Up', icon: Truck, color: 'text-[#C29A4A]' },
+  IN_TRANSIT: { label: 'In Transit', icon: Truck, color: 'text-[#C29A4A]' },
   DELIVERED: { label: 'Delivered', icon: CheckCircle2, color: 'text-green-500' },
 };
 
@@ -85,28 +85,27 @@ export default function Track() {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[#0a0e1a] py-28 lg:py-36">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
+      <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
         <motion.div
-          animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }}
+          animate={{ scale: [1, 1.1, 1], opacity: [0.03, 0.06, 0.03] }}
           transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute left-1/2 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b] blur-3xl"
+          className="absolute left-1/2 top-1/3 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C29A4A]/10 blur-3xl"
         />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedHero className="mx-auto max-w-3xl text-center">
             <AnimatedHeroItem>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b] backdrop-blur-sm">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#C29A4A]/20 bg-[#C29A4A]/10 px-4 py-1.5 text-sm font-medium text-[#C29A4A] backdrop-blur-sm">
                 <Search size={14} />
                 Real-Time Tracking
               </div>
             </AnimatedHeroItem>
             <AnimatedHeroItem>
-              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
+              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl font-heading">
                 Track Shipment
               </h1>
             </AnimatedHeroItem>
             <AnimatedHeroItem>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#f59e0b]/80">
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-400">
                 Enter your reference number to track your shipment in real-time.
               </p>
             </AnimatedHeroItem>
@@ -131,7 +130,7 @@ export default function Track() {
               <Button
                 type="submit"
                 disabled={isLoading || !reference.trim()}
-                className="bg-[#0a0e1a] text-white hover:bg-[#1a1f2e] dark:bg-[#f59e0b] dark:text-[#0a0e1a]"
+                className="bg-[#163A5F] text-white hover:bg-[#204B74] dark:bg-[#C29A4A] dark:text-[#163A5F]"
               >
                 {isLoading ? <Loader2 size={18} className="animate-spin" /> : 'Track'}
               </Button>
@@ -173,7 +172,7 @@ export default function Track() {
                       className={cn(
                         'flex flex-col items-center gap-1.5 rounded-xl border-2 p-3 text-center transition-all',
                         isCurrent
-                          ? 'border-[#f59e0b] bg-[#f59e0b]/5 shadow-sm'
+                          ? 'border-[#C29A4A] bg-[#C29A4A]/5 shadow-sm'
                           : isReached
                           ? 'border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950'
                           : 'border-gray-100 bg-gray-50 dark:border-gray-800 dark:bg-gray-900'
@@ -182,14 +181,14 @@ export default function Track() {
                       <Icon
                         size={20}
                         className={cn(
-                          isCurrent ? 'text-[#f59e0b]' : isReached ? 'text-green-500' : 'text-gray-300'
+                          isCurrent ? 'text-[#C29A4A]' : isReached ? 'text-green-500' : 'text-gray-300'
                         )}
                       />
                       <p
                         className={cn(
                           'text-[11px] font-semibold leading-tight',
                           isCurrent
-                            ? 'text-[#f59e0b]'
+                            ? 'text-[#C29A4A]'
                             : isReached
                             ? 'text-green-600 dark:text-green-400'
                             : 'text-gray-400'
@@ -205,29 +204,29 @@ export default function Track() {
               {/* Shipment info card */}
               <PremiumCard variant="elevated" hover="none">
                 <div className="flex items-center gap-3 border-b border-gray-100 px-6 py-4 dark:border-gray-800">
-                  <FileText size={18} className="text-[#f59e0b]" />
+                  <FileText size={18} className="text-[#C29A4A]" />
                   <div>
                     <p className="text-xs text-muted-foreground">Reference</p>
-                    <p className="font-bold text-[#f59e0b]">{result.referenceNumber}</p>
+                    <p className="font-bold text-[#C29A4A]">{result.referenceNumber}</p>
                   </div>
                 </div>
                 <div className="grid gap-6 p-6 sm:grid-cols-2">
                   <div className="flex items-start gap-3">
-                    <MapPin size={16} className="mt-0.5 shrink-0 text-[#f59e0b]" />
+                    <MapPin size={16} className="mt-0.5 shrink-0 text-[#C29A4A]" />
                     <div>
                       <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">From</p>
                       <p className="mt-0.5 font-semibold">{result.pickupAddress}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <MapPin size={16} className="mt-0.5 shrink-0 text-[#f59e0b]" />
+                    <MapPin size={16} className="mt-0.5 shrink-0 text-[#C29A4A]" />
                     <div>
                       <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">To</p>
                       <p className="mt-0.5 font-semibold">{result.deliveryAddress}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Calendar size={16} className="mt-0.5 shrink-0 text-[#f59e0b]" />
+                    <Calendar size={16} className="mt-0.5 shrink-0 text-[#C29A4A]" />
                     <div>
                       <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Estimated Delivery</p>
                       <p className="mt-0.5 font-semibold">
@@ -238,7 +237,7 @@ export default function Track() {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Circle size={16} className="mt-0.5 shrink-0 text-[#f59e0b]" />
+                    <Circle size={16} className="mt-0.5 shrink-0 text-[#C29A4A]" />
                     <div>
                       <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Current Status</p>
                       <div className="mt-0.5">

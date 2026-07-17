@@ -149,23 +149,22 @@ export default function GalleryPage() {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[#0a0e1a] py-28 lg:py-36">
+      <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
         <div className="absolute inset-0">
-          <img src={images.gallery.items[0]} alt="" className="h-full w-full object-cover opacity-30" />
+          <img src={images.gallery.items[0]} alt="" className="h-full w-full object-cover opacity-20" />
         </div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/70 to-[#0a0e1a]" />
-        <div className="absolute left-1/2 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b]/5 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#163A5F]/60 to-[#163A5F]" />
+        <div className="absolute left-1/2 top-1/3 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C29A4A]/5 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedHero className="mx-auto max-w-3xl text-center">
             <AnimatedHeroItem>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b]">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#C29A4A]/20 bg-[#C29A4A]/10 px-4 py-1.5 text-sm font-medium text-[#C29A4A]">
                 <Image size={14} />
                 Our Work in Action
               </div>
             </AnimatedHeroItem>
             <AnimatedHeroItem>
-              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
+              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl font-heading">
                 Gallery
               </h1>
             </AnimatedHeroItem>
@@ -190,7 +189,7 @@ export default function GalleryPage() {
                 className={cn(
                   'rounded-full px-4 py-1.5 text-sm font-medium transition-all',
                   category === cat
-                    ? 'bg-[#0a0e1a] text-white dark:bg-[#f59e0b] dark:text-[#0a0e1a]'
+                    ? 'bg-[#163A5F] text-white dark:bg-[#C29A4A] dark:text-[#163A5F]'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
                 )}
               >

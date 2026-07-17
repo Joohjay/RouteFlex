@@ -7,11 +7,13 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Card, CardContent } from '@/components/ui/Card';
-import { usePublicProfile } from '@/hooks/usePublicData';
 import { api } from '@/lib/api';
 import { images } from '@/lib/images';
 import { toast } from 'sonner';
 import { AnimatedHero, AnimatedHeroItem, AnimatedSection } from '@/animations';
+
+const CONTACT_PHONE = '+255 685 959 574';
+const CONTACT_EMAIL = 'japhetjohnson377@gmail.com';
 
 const contactSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -38,14 +40,14 @@ function OfficeCard({
   return (
     <Wrapper
       href={href}
-      className={`group flex items-start gap-4 rounded-xl p-4 transition-colors ${href ? 'hover:bg-[#f59e0b]/5' : ''}`}
+      className={`group flex items-start gap-4 rounded-xl p-4 transition-colors ${href ? 'hover:bg-[#C29A4A]/5' : ''}`}
     >
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#f59e0b]/10 text-[#f59e0b]">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#C29A4A]/10 text-[#C29A4A]">
         <Icon size={20} />
       </span>
       <div>
         <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{label}</p>
-        <p className={`mt-0.5 font-semibold ${href ? 'text-[#f59e0b]' : 'text-gray-900 dark:text-white'}`}>
+        <p className={`mt-0.5 font-semibold ${href ? 'text-[#C29A4A]' : 'text-gray-900 dark:text-white'}`}>
           {value}
         </p>
       </div>
@@ -54,9 +56,6 @@ function OfficeCard({
 }
 
 export default function Contact() {
-  const { data } = usePublicProfile();
-  const company = data?.company;
-
   const {
     register,
     handleSubmit,
@@ -84,23 +83,22 @@ export default function Contact() {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[#0a0e1a] py-28 lg:py-36">
+      <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
         <div className="absolute inset-0">
-          <img src={images.contact.office} alt="" className="h-full w-full object-cover opacity-25" />
+          <img src={images.contact.office} alt="" className="h-full w-full object-cover opacity-20" />
         </div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/70 to-[#0a0e1a]" />
-        <div className="absolute left-1/2 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b]/5 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#163A5F]/60 to-[#163A5F]" />
+        <div className="absolute left-1/2 top-1/3 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C29A4A]/5 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedHero className="mx-auto max-w-3xl text-center">
             <AnimatedHeroItem>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b]">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#C29A4A]/20 bg-[#C29A4A]/10 px-4 py-1.5 text-sm font-medium text-[#C29A4A]">
                 <Mail size={14} />
                 Get in Touch
               </div>
             </AnimatedHeroItem>
             <AnimatedHeroItem>
-              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
+              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl font-heading">
                 Contact Us
               </h1>
             </AnimatedHeroItem>
@@ -127,16 +125,11 @@ export default function Contact() {
                   </p>
                 </div>
                 <div className="space-y-2">
-                  {company?.phone && (
-                    <OfficeCard icon={Phone} label="Phone" value={company.phone} href={`tel:${company.phone}`} />
-                  )}
-                  {company?.email && (
-                    <OfficeCard icon={Mail} label="Email" value={company.email} href={`mailto:${company.email}`} />
-                  )}
-                  {company?.address && (
-                    <OfficeCard icon={MapPin} label="Address" value={company.address} />
-                  )}
+                  <OfficeCard icon={Phone} label="Phone" value={CONTACT_PHONE} href={`tel:+255685959574`} />
+                  <OfficeCard icon={Mail} label="Email" value={CONTACT_EMAIL} href={`mailto:${CONTACT_EMAIL}`} />
+                  <OfficeCard icon={MapPin} label="Address" value="Dar es Salaam, Tanzania" />
                   <OfficeCard icon={Clock} label="Working Hours" value="Mon - Fri: 8:00 AM - 6:00 PM" />
+                  <OfficeCard icon={Phone} label="WhatsApp" value="Chat on WhatsApp" href="https://wa.me/255685959574" />
                 </div>
               </div>
 
@@ -146,8 +139,8 @@ export default function Contact() {
                   <img src={images.contact.office} alt="Our office" className="h-full w-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                   <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white">
-                    <MapPin size={16} className="text-[#f59e0b]" />
-                    <span className="text-sm font-medium drop-shadow">{company?.address ?? 'Our Location'}</span>
+                    <MapPin size={16} className="text-[#C29A4A]" />
+                    <span className="text-sm font-medium drop-shadow">Dar es Salaam, Tanzania</span>
                   </div>
                 </div>
               </div>
@@ -194,7 +187,7 @@ export default function Contact() {
                       {errors.message && <p className="mt-1 text-sm text-red-500">{errors.message.message}</p>}
                     </div>
 
-                    <Button type="submit" disabled={isSubmitting} className="w-full bg-[#0a0e1a] text-white hover:bg-[#1a1f2e] sm:w-auto">
+                    <Button type="submit" disabled={isSubmitting} className="w-full bg-[#163A5F] text-white hover:bg-[#204B74] sm:w-auto">
                       {isSubmitting ? (
                         <Loader2 size={18} className="mr-2 animate-spin" />
                       ) : (

@@ -18,7 +18,7 @@ const serviceIcons: Record<string, typeof Package> = {
 
 const serviceImages: Record<string, string> = {
   'local-freight': images.services.freight,
-  'long-haul-transport': images.services.express,
+  'long-haul-transport': images.services.longHaulNight,
   'heavy-haul': images.services.heavyHaul,
   'refrigerated-transport': images.services.warehousing,
   'international-freight': images.services.international,
@@ -43,7 +43,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
           <div className="relative h-44 overflow-hidden">
             <img src={imgSrc} alt={service.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-            <div className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f59e0b] text-white shadow-lg">
+            <div className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#C29A4A] text-white shadow-lg">
               <Icon size={24} />
             </div>
           </div>
@@ -52,7 +52,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
             <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
               {service.summary ?? service.description}
             </p>
-            <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#f59e0b]">
+            <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#C29A4A]">
               Learn more
               <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
             </span>
@@ -74,23 +74,22 @@ export default function Services() {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[#0a0e1a] py-28 lg:py-36">
+      <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
         <div className="absolute inset-0">
-          <img src={images.services.logistics} alt="" className="h-full w-full object-cover opacity-30" />
+          <img src={images.services.logistics} alt="" className="h-full w-full object-cover opacity-20" />
         </div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/70 to-[#0a0e1a]" />
-        <div className="absolute left-1/2 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b]/5 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#163A5F]/60 to-[#163A5F]" />
+        <div className="absolute left-1/2 top-1/3 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C29A4A]/5 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedHero className="mx-auto max-w-3xl text-center">
             <AnimatedHeroItem>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b]">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#C29A4A]/20 bg-[#C29A4A]/10 px-4 py-1.5 text-sm font-medium text-[#C29A4A]">
                 <Shield size={14} />
                 Comprehensive Solutions
               </div>
             </AnimatedHeroItem>
             <AnimatedHeroItem>
-              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
+              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl font-heading">
                 Our Services
               </h1>
             </AnimatedHeroItem>
@@ -131,7 +130,7 @@ export default function Services() {
       </AnimatedSection>
 
       {/* Stats */}
-      <AnimatedSection className="bg-[#0a0e1a] py-20">
+      <AnimatedSection className="bg-[#163A5F] py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((stat, i) => {
@@ -145,7 +144,7 @@ export default function Services() {
                   transition={{ delay: i * 0.1 }}
                   className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center backdrop-blur"
                 >
-                  <StatIcon size={28} className="mx-auto text-[#f59e0b]" />
+                  <StatIcon size={28} className="mx-auto text-[#C29A4A]" />
                   <div className="mt-3 text-3xl font-extrabold text-white">{stat.value}</div>
                   <div className="mt-1 text-sm text-gray-400">{stat.label}</div>
                 </motion.div>
@@ -156,11 +155,11 @@ export default function Services() {
       </AnimatedSection>
 
       {/* CTA */}
-      <AnimatedSection className="relative overflow-hidden bg-gradient-to-br from-[#0a0e1a] to-[#111827] py-20">
-        <div className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b]/5 blur-3xl" />
+      <AnimatedSection className="relative overflow-hidden py-20" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
+        <div className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C29A4A]/5 blur-3xl" />
         <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b]">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#C29A4A]/20 bg-[#C29A4A]/10 px-4 py-1.5 text-sm font-medium text-[#C29A4A]">
               <Award size={14} />
               Reliable & Trusted
             </div>
@@ -171,7 +170,7 @@ export default function Services() {
               Get an instant quote and book your transport in minutes. Our team is ready to help.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <Button asChild size="lg" className="bg-[#f59e0b] text-[#0a0e1a] hover:bg-[#d97706]">
+              <Button asChild size="lg" className="bg-[#C29A4A] text-[#163A5F] hover:bg-[#B8863A]">
                 <Link to="/book">Get a Quote</Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
