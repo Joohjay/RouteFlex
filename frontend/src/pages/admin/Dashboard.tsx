@@ -56,7 +56,7 @@ function RequestStatusDot({ status }: { status: string }) {
   const colors: Record<string, string> = {
     PENDING: 'bg-gray-400',
     CONFIRMED: 'bg-blue-500',
-    PICKED_UP: 'bg-[#f59e0b]',
+    PICKED_UP: 'bg-[#C29A4A]',
     IN_TRANSIT: 'bg-blue-500',
     DELIVERED: 'bg-green-500',
     CANCELLED: 'bg-red-500',
@@ -177,12 +177,12 @@ export default function Dashboard() {
                     className="group flex items-center justify-between rounded-xl p-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-900"
                   >
                     <div className="flex items-center gap-3">
-                      <MapPin size={18} className="text-[#f59e0b]" />
+                      <MapPin size={18} className="text-[#C29A4A]" />
                       <span className="text-sm">
                         {route.pickup} <ArrowRight size={12} className="inline text-muted-foreground" /> {route.destination}
                       </span>
                     </div>
-                    <span className="rounded-full bg-[#f59e0b]/10 px-3 py-1 text-xs font-medium text-[#f59e0b]">
+                    <span className="rounded-full bg-[#C29A4A]/10 px-3 py-1 text-xs font-medium text-[#C29A4A]">
                       {route.count} bookings
                     </span>
                   </motion.div>
@@ -212,7 +212,7 @@ export default function Dashboard() {
                     className="group flex items-center justify-between rounded-xl p-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-900"
                   >
                     <div className="flex items-center gap-3">
-                      <Truck size={18} className="text-[#f59e0b]" />
+                      <Truck size={18} className="text-[#C29A4A]" />
                       <span className="text-sm capitalize">{item.status.toLowerCase().replace(/_/g, ' ')}</span>
                     </div>
                     <span className="font-medium">{item.count}</span>
