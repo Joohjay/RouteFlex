@@ -1,13 +1,13 @@
 import type { TargetAndTransition } from 'framer-motion';
 
 export const hoverScale: TargetAndTransition = {
-  scale: 1.03,
+  scale: 1.02,
   transition: { type: 'spring', stiffness: 400, damping: 25 },
 };
 
 export const hoverLift: TargetAndTransition = {
-  y: -4,
-  boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+  y: -3,
+  boxShadow: '0 6px 20px rgba(0,0,0,0.10)',
   transition: { type: 'spring', stiffness: 400, damping: 25 },
 };
 

@@ -64,14 +64,14 @@ export const timelineItemPreset = {
 };
 
 export const stepIconPulse = {
-  animate: { scale: [1, 1.08, 1] },
+  animate: { scale: [1, 1.05, 1] },
   transition: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
 };
 
 export const glassHover = {
   whileHover: {
-    backdropFilter: 'blur(12px)',
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    transition: { duration: 0.2 },
+    backdropFilter: 'blur(8px)',
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    transition: { duration: 0.3 },
   },
 };

@@ -55,7 +55,7 @@ export function CursorGlow() {
           scale: isVisible ? 1 : 0.3,
         }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="h-80 w-80 rounded-full bg-[#f59e0b]/10 blur-[80px]"
+        className="h-80 w-80 rounded-full bg-[#C29A4A]/10 blur-[80px]"
       />
       <motion.div
         animate={{
@@ -63,7 +63,7 @@ export function CursorGlow() {
           scale: isVisible ? 1 : 0.3,
         }}
         transition={{ duration: 0.3, ease: 'easeOut', delay: 0.05 }}
-        className="absolute inset-0 h-40 w-40 rounded-full bg-[#f59e0b]/20 blur-[40px]"
+        className="absolute inset-0 h-40 w-40 rounded-full bg-[#C29A4A]/20 blur-[40px]"
       />
     </motion.div>
   );

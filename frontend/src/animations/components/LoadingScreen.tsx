@@ -19,7 +19,7 @@ export function LoadingScreen({ minDuration = 1500 }: LoadingScreenProps) {
     <AnimatePresence>
       {!isDone && (
         <motion.div
-          className="fixed inset-0 z-[9998] flex items-center justify-center bg-[#0a0e1a]"
+          className="fixed inset-0 z-[9998] flex items-center justify-center bg-[#163A5F]"
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
         >
@@ -46,12 +46,12 @@ export function LoadingScreen({ minDuration = 1500 }: LoadingScreenProps) {
             <motion.div
               animate={prefersReducedMotion ? { opacity: 1 } : { width: ['0%', '100%'] }}
               transition={{ duration: minDuration / 1000, ease: 'easeInOut' }}
-              className="h-0.5 w-48 rounded-full bg-[#f59e0b]/30"
+              className="h-0.5 w-48 rounded-full bg-[#C29A4A]/30"
             >
               <motion.div
                 animate={{ width: ['0%', '100%'] }}
                 transition={{ duration: minDuration / 1000, ease: 'easeInOut' }}
-                className="h-full rounded-full bg-[#f59e0b]"
+                className="h-full rounded-full bg-[#C29A4A]"
               />
             </motion.div>
           </motion.div>
