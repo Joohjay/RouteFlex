@@ -1,28 +1,33 @@
 import { useState, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Truck, Search, FilterX, Weight } from 'lucide-react';
-import { usePublicFleet } from '@/hooks/usePublicData';
+import { Truck, Search, FilterX } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { AnimatedSection, AnimatedHero, AnimatedHeroItem } from '@/animations';
-import { PremiumCard, StatusBadge } from '@/components/premium';
+import { PremiumCard } from '@/components/premium';
 import { images } from '@/lib/images';
 import { cn } from '@/lib/utils';
-import type { Fleet } from '@/types';
 
-const vehicleTypeLabels: Record<string, string> = {
-  VAN: 'Vans',
-  TRUCK: 'Trucks',
-  TRAILER: 'Trailers',
-  FLATBED: 'Flatbeds',
-  REFRIGERATED: 'Refrigerated',
-  HEAVY: 'Heavy Haul',
-};
+type ImageGroup = 'VAN' | 'TRUCK' | 'TRAILER' | 'FLATBED' | 'REFRIGERATED' | 'HEAVY';
+type FilterGroup = 'ALL' | ImageGroup;
 
-const typeFilters = ['ALL', 'VAN', 'TRUCK', 'TRAILER', 'FLATBED', 'REFRIGERATED', 'HEAVY'] as const;
+interface GalleryItem {
+  src: string;
+  name: string;
+  group: ImageGroup;
+}
 
-const fleetImages: Record<string, string> = {
+const filterGroupConfig: { key: ImageGroup; label: string }[] = [
+  { key: 'VAN', label: 'Vans' },
+  { key: 'TRUCK', label: 'Trucks' },
+  { key: 'TRAILER', label: 'Trailers' },
+  { key: 'FLATBED', label: 'Flatbeds' },
+  { key: 'REFRIGERATED', label: 'Refrigerated' },
+  { key: 'HEAVY', label: 'Heavy Haul' },
+];
+
+const groupImageMap: Record<ImageGroup, readonly string[]> = {
   VAN: images.fleet.van,
   TRUCK: images.fleet.truck,
   TRAILER: images.fleet.trailer,
@@ -31,64 +36,56 @@ const fleetImages: Record<string, string> = {
   HEAVY: images.fleet.heavy,
 };
 
-function FleetCard({ vehicle, index }: { vehicle: Fleet; index: number }) {
-  const imgSrc = vehicle.images?.[0]?.url || fleetImages[vehicle.type] || images.fleet.truck;
+function fileNameToName(filename: string): string {
+  const withoutExt = filename.replace(/\.[^.]+$/, '');
+  return withoutExt
+    .replace(/[-_]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+const allGalleryItems: GalleryItem[] = (Object.entries(groupImageMap) as [ImageGroup, readonly string[]][]).flatMap(
+  ([group, paths]) =>
+    paths.map((src) => {
+      const parts = src.split('/');
+      const filename = parts[parts.length - 1] ?? '';
+      return { src, name: fileNameToName(filename), group };
+    })
+);
+
+function FleetCard({ item, index }: { item: GalleryItem; index: number }) {
   return (
     <motion.div
       layout
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ delay: index * 0.05, duration: 0.3 }}
+      transition={{ delay: index * 0.03, duration: 0.3 }}
     >
       <PremiumCard variant="elevated" hover="lift" className="group h-full overflow-hidden">
         <div className="relative h-48 overflow-hidden">
           <img
-            src={imgSrc}
-            alt={vehicle.name}
+            src={item.src}
+            alt={item.name}
             className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-          <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-            <StatusBadge status={vehicle.status} size="sm" />
-            <span className="rounded-full bg-[#f59e0b]/90 px-3 py-1 text-xs font-bold text-[#0a0e1a] backdrop-blur-sm">
-              {(vehicle.capacityKg / 1000).toFixed(0)}T capacity
+          <div className="absolute bottom-3 left-3">
+            <span className="rounded-full bg-[#C29A4A]/90 px-3 py-1 text-xs font-bold text-[#163A5F] backdrop-blur-sm">
+              {filterGroupConfig.find((c) => c.key === item.group)?.label ?? item.group}
             </span>
           </div>
         </div>
         <div className="p-5">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <h3 className="text-lg font-bold">{vehicle.name}</h3>
-              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                {vehicleTypeLabels[vehicle.type] ?? vehicle.type}
-              </span>
-            </div>
-          </div>
+          <h3 className="text-lg font-bold">{item.name}</h3>
           <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-            {vehicle.description}
+            {item.group === 'VAN' && 'Compact and efficient van for local deliveries & small cargo.'}
+            {item.group === 'TRUCK' && 'Heavy-duty truck built for regional and long-haul freight.'}
+            {item.group === 'TRAILER' && 'Versatile trailer for secure and bulk cargo transport.'}
+            {item.group === 'FLATBED' && 'Flatbed trailer ideal for oversized and heavy equipment.'}
+            {item.group === 'REFRIGERATED' && 'Temperature-controlled refrigerated unit for perishable goods.'}
+            {item.group === 'HEAVY' && 'Specialized heavy-haul vehicle for oversized machinery.'}
           </p>
-
-          <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
-            <span className="inline-flex items-center gap-1">
-              <Weight size={13} /> {(vehicle.capacityKg / 1000).toFixed(0)}T capacity
-            </span>
-          </div>
-
-          {vehicle.features && vehicle.features.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {vehicle.features.slice(0, 3).map((f, i) => (
-                <span key={i} className="rounded-md bg-[#f59e0b]/5 px-2 py-0.5 text-xs font-medium text-[#f59e0b]">
-                  {f}
-                </span>
-              ))}
-              {vehicle.features.length > 3 && (
-                <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs text-gray-500 dark:bg-gray-800">
-                  +{vehicle.features.length - 3}
-                </span>
-              )}
-            </div>
-          )}
         </div>
       </PremiumCard>
     </motion.div>
@@ -96,30 +93,27 @@ function FleetCard({ vehicle, index }: { vehicle: Fleet; index: number }) {
 }
 
 export default function Fleet() {
-  const { data: fleet, isLoading } = usePublicFleet();
   const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState<string>('ALL');
+  const [typeFilter, setTypeFilter] = useState<FilterGroup>('ALL');
 
   const filtered = useMemo(() => {
-    if (!fleet) return [];
-    return fleet.filter((v) => {
+    return allGalleryItems.filter((item) => {
       const matchesSearch = search.length === 0 ||
-        v.name.toLowerCase().includes(search.toLowerCase()) ||
-        v.description?.toLowerCase().includes(search.toLowerCase());
-      const matchesType = typeFilter === 'ALL' || v.type === typeFilter;
+        item.name.toLowerCase().includes(search.toLowerCase());
+      const matchesType = typeFilter === 'ALL' || item.group === typeFilter;
       return matchesSearch && matchesType;
     });
-  }, [fleet, search, typeFilter]);
+  }, [search, typeFilter]);
 
   const hasFilters = search.length > 0 || typeFilter !== 'ALL';
+
   const vehicleCounts = useMemo(() => {
-    if (!fleet) return {};
-    const counts: Record<string, number> = { ALL: fleet.length };
-    typeFilters.slice(1).forEach((t) => {
-      counts[t] = fleet.filter((v) => v.type === t).length;
+    const counts: Record<string, number> = { ALL: allGalleryItems.length };
+    filterGroupConfig.forEach((c) => {
+      counts[c.key] = allGalleryItems.filter((item) => item.group === c.key).length;
     });
     return counts;
-  }, [fleet]);
+  }, []);
 
   return (
     <>
@@ -129,34 +123,33 @@ export default function Fleet() {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[#0a0e1a] py-28 lg:py-36">
+      <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
         <div className="absolute inset-0">
-          <div className="h-full w-full bg-[length:200%_200%] bg-gradient-to-br from-[#0a0e1a] via-[#111827] to-[#0a0e1a] animate-[gradient_8s_ease_infinite]" />
-          <img src={images.fleet.truck} alt="" className="absolute inset-0 h-full w-full object-cover opacity-20" />
+          <div className="h-full w-full bg-[length:200%_200%] bg-gradient-to-br from-[#163A5F] via-[#204B74] to-[#2A5F90] animate-[gradient_8s_ease_infinite]" />
+          <img src={images.fleet.truck[0]} alt="" className="absolute inset-0 h-full w-full object-cover opacity-20" />
         </div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/60 to-[#0a0e1a]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#163A5F]/50 to-[#163A5F]" />
         <motion.div
-          animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.08, 0.05] }}
+          animate={{ scale: [1, 1.1, 1], opacity: [0.03, 0.06, 0.03] }}
           transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute left-1/2 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f59e0b] blur-3xl"
+          className="absolute left-1/2 top-1/3 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C29A4A]/10 blur-3xl"
         />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedHero className="mx-auto max-w-3xl text-center">
             <AnimatedHeroItem>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b] backdrop-blur-sm">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#C29A4A]/20 bg-[#C29A4A]/10 px-4 py-1.5 text-sm font-medium text-[#C29A4A] backdrop-blur-sm">
                 <Truck size={14} />
                 Modern Fleet
               </div>
             </AnimatedHeroItem>
             <AnimatedHeroItem>
-              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
+              <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl font-heading">
                 Our Fleet
               </h1>
             </AnimatedHeroItem>
             <AnimatedHeroItem>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#f59e0b]/80">
-                A diverse, well-maintained fleet ready to handle any cargo requirement. Every vehicle is GPS-tracked and regularly serviced.
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#C29A4A]/80">
+                A diverse, well-maintained fleet ready to handle any cargo requirement.
               </p>
             </AnimatedHeroItem>
           </AnimatedHero>
@@ -168,19 +161,31 @@ export default function Fleet() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap gap-2">
-              {typeFilters.map((type) => (
+              <button
+                onClick={() => setTypeFilter('ALL')}
+                className={cn(
+                  'rounded-full px-4 py-1.5 text-sm font-medium transition-all',
+                  typeFilter === 'ALL'
+                    ? 'bg-[#163A5F] text-white shadow-sm dark:bg-[#C29A4A] dark:text-[#163A5F]'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                )}
+              >
+                All Vehicles
+                <span className="ml-1.5 text-xs opacity-60">({vehicleCounts['ALL']})</span>
+              </button>
+              {filterGroupConfig.map((config) => (
                 <button
-                  key={type}
-                  onClick={() => setTypeFilter(type)}
+                  key={config.key}
+                  onClick={() => setTypeFilter(config.key)}
                   className={cn(
                     'rounded-full px-4 py-1.5 text-sm font-medium transition-all',
-                    typeFilter === type
-                      ? 'bg-[#0a0e1a] text-white shadow-sm dark:bg-[#f59e0b] dark:text-[#0a0e1a]'
+                    typeFilter === config.key
+                      ? 'bg-[#163A5F] text-white shadow-sm dark:bg-[#C29A4A] dark:text-[#163A5F]'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
                   )}
                 >
-                  {type === 'ALL' ? 'All Vehicles' : vehicleTypeLabels[type] ?? type}
-                  <span className="ml-1.5 text-xs opacity-60">({vehicleCounts[type] ?? 0})</span>
+                  {config.label}
+                  <span className="ml-1.5 text-xs opacity-60">({vehicleCounts[config.key]})</span>
                 </button>
               ))}
             </div>
@@ -200,17 +205,11 @@ export default function Fleet() {
       {/* Fleet Grid */}
       <AnimatedSection className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {isLoading ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                <div key={i} className="h-80 animate-pulse rounded-xl bg-gray-200 dark:bg-gray-800" />
-              ))}
-            </div>
-          ) : filtered.length > 0 ? (
+          {filtered.length > 0 ? (
             <motion.div layout className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               <AnimatePresence mode="popLayout">
-                {filtered.map((vehicle, i) => (
-                  <FleetCard key={vehicle.id} vehicle={vehicle} index={i} />
+                {filtered.map((item, i) => (
+                  <FleetCard key={item.src} item={item} index={i} />
                 ))}
               </AnimatePresence>
             </motion.div>
