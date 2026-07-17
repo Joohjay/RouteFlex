@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,48 +6,63 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    --background: 60 8% 97%;
+    --foreground: 240 4% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 240 4% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 222 47% 11%;
+    --popover-foreground: 240 4% 11%;
+    --primary: 211 62% 23%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 38 92% 50%;
-    --secondary-foreground: 222 47% 11%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 38 92% 95%;
-    --accent-foreground: 222 47% 11%;
-    --destructive: 0 84% 60%;
+    --secondary: 209 27% 43%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 41 50% 52%;
+    --accent-foreground: 0 0% 100%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 212 7% 39%;
+    --destructive: 0 66% 47%;
     --destructive-foreground: 0 0% 100%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 222 47% 11%;
+    --border: 214 15% 91%;
+    --input: 214 15% 91%;
+    --ring: 211 62% 23%;
     --radius: 0.5rem;
+
+    --success: 123 46% 34%;
+    --warning: 39 100% 42%;
+    --gold: 41 50% 52%;
+    --gold-light: 41 50% 92%;
+    --navy: 211 62% 23%;
+    --navy-light: 211 62% 95%;
   }
 
   .dark {
-    --background: 222 47% 7%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 12%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 12%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 38 92% 50%;
-    --primary-foreground: 222 47% 11%;
-    --secondary: 217 91% 60%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 222 47% 14%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 222 47% 16%;
-    --accent-foreground: 210 40% 98%;
+    --background: 211 50% 8%;
+    --foreground: 210 20% 96%;
+    --card: 211 45% 12%;
+    --card-foreground: 210 20% 96%;
+    --popover: 211 45% 12%;
+    --popover-foreground: 210 20% 96%;
+    --primary: 41 50% 52%;
+    --primary-foreground: 211 62% 23%;
+    --secondary: 209 20% 35%;
+    --secondary-foreground: 210 20% 96%;
+    --accent: 41 50% 52%;
+    --accent-foreground: 211 62% 23%;
+    --muted: 211 45% 14%;
+    --muted-foreground: 209 15% 60%;
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222 47% 16%;
-    --input: 222 47% 16%;
-    --ring: 38 92% 50%;
+    --border: 211 45% 18%;
+    --input: 211 45% 18%;
+    --ring: 41 50% 52%;
+    --radius: 0.5rem;
+
+    --success: 123 40% 40%;
+    --warning: 39 90% 45%;
+    --gold: 41 50% 52%;
+    --gold-light: 41 30% 15%;
+    --navy: 211 62% 23%;
+    --navy-light: 211 30% 12%;
   }
 }
 
@@ -68,16 +83,5 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
-  }
-
-  .bg-grid {
-    background-size: 40px 40px;
-    background-image: linear-gradient(to right, rgb(0 0 0 / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(0 0 0 / 0.05) 1px, transparent 1px);
-  }
-
-  .dark .bg-grid {
-    background-image: linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
   }
 }
