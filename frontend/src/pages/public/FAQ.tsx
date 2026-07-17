@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { SectionHeader } from '@/components/common/SectionHeader';
+import { SEO } from '@/components/seo/SEO';
 
 const faqs = [
   {
@@ -37,6 +38,11 @@ const faqs = [
 export default function FAQ() {
   return (
     <>
+      <SEO
+  title="FAQ"
+  description="Frequently asked questions about JJ Transport's freight and logistics services. Find answers about booking, tracking, pricing, and delivery."
+  canonical="/faq"
+/>
       <section className="bg-gradient-to-br from-brand-900 to-brand-700 py-20 text-white">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <motion.h1

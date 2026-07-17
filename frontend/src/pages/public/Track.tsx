@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/seo/SEO';
 import { motion } from 'framer-motion';
 import { Search, Package, CheckCircle2, Truck, Loader2, MapPin, Calendar, FileText, Circle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -79,10 +79,11 @@ export default function Track() {
 
   return (
     <>
-      <Helmet>
-        <title>Track Shipment | JJ Transport</title>
-        <meta name="description" content="Track your JJ Transport shipment in real-time. Enter your reference number to see the latest status and delivery updates." />
-      </Helmet>
+      <SEO
+  title="Track Shipment"
+  description="Track your JJ Transport shipment in real-time. Enter your reference number to see the latest status and delivery updates."
+  canonical="/track"
+/>
 
       {/* Hero */}
       <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>

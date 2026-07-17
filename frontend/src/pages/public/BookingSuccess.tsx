@@ -2,6 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, MessageCircle, Truck, FileText } from 'lucide-react';
+import { SEO } from '@/components/seo/SEO';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { usePublicProfile } from '@/hooks/usePublicData';
@@ -43,7 +44,9 @@ export default function BookingSuccess() {
     : null;
 
   return (
-    <section className="py-20">
+    <>
+      <SEO title="Booking Confirmed" description="Your transport booking has been confirmed. Thank you for choosing JJ Transport." noIndex />
+      <section className="py-20">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -109,5 +112,6 @@ export default function BookingSuccess() {
         </div>
       </div>
     </section>
+    </>
   );
 }

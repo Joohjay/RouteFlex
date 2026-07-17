@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/common/Loading';
 import { usePublicBlogPost } from '@/hooks/usePublicData';
 import { formatDate } from '@/lib/utils';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/seo/SEO';
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
@@ -28,10 +28,7 @@ export default function BlogPost() {
 
   return (
     <>
-      <Helmet>
-        <title>{post.metaTitle ?? post.title} | JJ Transport</title>
-        {post.metaDescription && <meta name="description" content={post.metaDescription} />}
-      </Helmet>
+      <SEO title={post?.title ?? 'Blog Post'} description={post?.excerpt ?? post?.content?.substring(0, 160) ?? 'Read this article from JJ Transport.'} canonical={`/blog/${slug}`} />
       <section className="bg-gradient-to-br from-brand-900 to-brand-700 py-20 text-white">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -50,7 +47,7 @@ export default function BlogPost() {
       <section className="py-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           {post.coverImage && (
-            <img src={post.coverImage} alt={post.title} className="mb-8 w-full rounded-2xl object-cover" />
+            <img src={post.coverImage} alt={post.title} loading="lazy" className="mb-8 w-full rounded-2xl object-cover" />
           )}
           <div className="prose dark:prose-invert max-w-none">
             <p className="text-lg text-muted-foreground">{post.excerpt}</p>

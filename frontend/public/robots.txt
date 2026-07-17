@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://routeflex.vercel.app/sitemap.xml

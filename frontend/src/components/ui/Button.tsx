@@ -1,9 +1,10 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
+import { useButtonMicro } from '@/animations/cinematic/micro';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#C29A4A] disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -36,6 +37,7 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild, children, ...props }, ref) => {
+    const { handlers } = useButtonMicro();
     const classes = cn(buttonVariants({ variant, size, className }));
 
     if (asChild && React.isValidElement(children)) {
@@ -48,7 +50,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     return (
-      <button className={classes} ref={ref} {...props}>
+      <button className={classes} ref={ref} {...props} {...handlers}>
         {children}
       </button>
     );

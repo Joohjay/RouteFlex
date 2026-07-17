@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Target, Eye, Heart, Users, Award, Truck, Package, Star } from 'lucide-react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/seo/SEO';
 import { SectionHeader } from '@/components/common/SectionHeader';
 import { AnimatedSection, AnimatedCard, AnimatedGrid, AnimatedHero, AnimatedHeroItem } from '@/animations';
 import { images } from '@/lib/images';
@@ -51,10 +51,11 @@ const teamMembers = [
 export default function About() {
   return (
     <>
-      <Helmet>
-        <title>About Us | JJ Transport</title>
-        <meta name="description" content="Learn about JJ Transport's history, mission, and the team behind our logistics services." />
-      </Helmet>
+      <SEO
+  title="About Us"
+  description="Learn about JJ Transport's history, mission, and the team behind our logistics services across Tanzania and East Africa."
+  canonical="/about"
+/>
 
       {/* Hero */}
       <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
@@ -114,7 +115,7 @@ export default function About() {
               transition={{ duration: 0.6 }}
               className="relative overflow-hidden rounded-2xl"
             >
-              <img src={images.about.facility} alt="Our facility" className="w-full rounded-2xl" />
+              <img src={images.about.facility} alt="Our facility" loading="lazy" className="w-full rounded-2xl" />
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/30 to-transparent" />
             </motion.div>
           </div>
@@ -181,6 +182,7 @@ export default function About() {
                     <img
                       src={member.photo}
                       alt={member.name}
+                      loading="lazy"
                       className={`h-full w-full transition-transform duration-500 group-hover:scale-105 ${member.name === 'Sarah Kimani' || member.name === 'David Ochieng' || member.name === 'Peter Kamau' ? 'object-cover object-top' : 'object-cover'}`}
                     />
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4">

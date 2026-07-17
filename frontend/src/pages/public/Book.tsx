@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/seo/SEO';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Truck, ArrowRight, ArrowLeft, Check, Loader2, Package, MapPin, ClipboardList, Weight, Calendar, Building2, User, Phone, Mail, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -13,7 +13,8 @@ import { usePublicServices } from '@/hooks/usePublicData';
 import { api } from '@/lib/api';
 import { toast } from 'sonner';
 import { AnimatedHero, AnimatedHeroItem } from '@/animations';
-import { StepProgress, PremiumCard } from '@/components/premium';
+import { PremiumCard } from '@/components/premium';
+import { RoadProgress } from '@/animations/cinematic';
 import { cn } from '@/lib/utils';
 
 const steps = [
@@ -159,10 +160,11 @@ export default function Book() {
 
   return (
     <>
-      <Helmet>
-        <title>Book Transport | JJ Transport</title>
-        <meta name="description" content="Book freight and logistics services with JJ Transport. Get a quote and schedule your shipment in minutes." />
-      </Helmet>
+      <SEO
+  title="Book Transport"
+  description="Book freight and logistics services with JJ Transport. Get a quote and schedule your shipment in minutes for delivery across Tanzania and East Africa."
+  canonical="/book"
+/>
 
       {/* Hero */}
       <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
@@ -198,7 +200,7 @@ export default function Book() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <PremiumCard variant="elevated" hover="none">
             <div className="p-8">
-              <StepProgress steps={steps} currentStep={step} />
+              <RoadProgress steps={steps} currentStep={step} className="mb-8" />
 
               {/* Step summary on mobile */}
               <div className="mb-6 grid grid-cols-4 gap-2 sm:hidden">

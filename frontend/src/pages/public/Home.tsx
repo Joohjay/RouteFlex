@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Clock, Shield, Truck, MapPin, Award, Star, ChevronRight, Package, TrendingUp } from 'lucide-react';
@@ -25,6 +26,8 @@ const fleetImages: Record<string, readonly string[]> = {
 import { usePublicServices, usePublicFleet, usePublicTestimonials, usePublicBlogPosts } from '@/hooks/usePublicData';
 import { AnimatedSection, AnimatedCard, AnimatedGrid, AnimatedHero, AnimatedHeroItem, ParallaxBackground } from '@/animations';
 import { images } from '@/lib/images';
+import { SEO } from '@/components/seo/SEO';
+import { HeroCinematic } from '@/animations/cinematic';
 
 const heroGlowVariants = {
   animate: {
@@ -64,7 +67,23 @@ const stats = [
   { value: '98%', label: 'On-Time Rate', icon: TrendingUp },
 ];
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "JJ Transport",
+  "url": "https://routeflex.vercel.app",
+  "description": "Premium freight and logistics solutions for businesses of all sizes across Tanzania and East Africa.",
+  "foundingDate": "2018",
+  "areaServed": ["Tanzania", "East Africa"],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+255-685-959-574",
+    "contactType": "customer service"
+  }
+};
+
 export default function Home() {
+  const heroRef = useRef<HTMLDivElement | null>(null);
   const { data: services, isLoading: servicesLoading } = usePublicServices();
   const { data: fleet, isLoading: fleetLoading } = usePublicFleet();
   const { data: testimonials, isLoading: testimonialsLoading } = usePublicTestimonials();
@@ -72,8 +91,15 @@ export default function Home() {
 
   return (
     <>
+      <SEO
+        title="Home"
+        description="Premium freight and logistics solutions across Tanzania and East Africa. Book transport, track shipments, and get quotes online — from local deliveries to heavy haul."
+        canonical="/"
+        jsonLd={organizationJsonLd}
+      />
       {/* ─── Hero ─── */}
-      <section className="relative min-h-[90vh] overflow-hidden" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
+      <HeroCinematic containerRef={heroRef}>
+      <section ref={heroRef} className="relative min-h-[90vh] overflow-hidden" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
         <ParallaxBackground src={images.hero.main} speed={0.25} className="opacity-20" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#163A5F]/40 via-[#163A5F]/65 to-[#163A5F]" />
         <motion.div
@@ -87,13 +113,13 @@ export default function Home() {
           <div className="w-full">
             <AnimatedHero className="max-w-3xl">
               <AnimatedHeroItem>
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#C29A4A]/20 bg-[#C29A4A]/10 px-4 py-1.5 text-sm font-medium text-[#C29A4A] backdrop-blur-sm">
+                <div data-cinematic-hero className="inline-flex items-center gap-2 rounded-full border border-[#C29A4A]/20 bg-[#C29A4A]/10 px-4 py-1.5 text-sm font-medium text-[#C29A4A] backdrop-blur-sm">
                   <Award size={14} />
                   Trusted Logistics Partner
                 </div>
               </AnimatedHeroItem>
               <AnimatedHeroItem>
-                <h1 className="mt-8 text-5xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-6xl lg:text-7xl font-heading">
+                <h1 data-cinematic-hero className="mt-8 text-5xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-6xl lg:text-7xl font-heading">
                   Freight & Logistics
                   <br />
                   <span className="bg-gradient-to-b from-white via-[#F5F2EB] to-[#D8B46A] bg-clip-text text-transparent">
@@ -145,6 +171,7 @@ export default function Home() {
 
         <ScrollIndicator />
       </section>
+      </HeroCinematic>
 
       {/* ─── Why Choose Us ─── */}
       <AnimatedSection className="py-24">
@@ -197,6 +224,7 @@ export default function Home() {
                         <img
                           src={service.imageUrl || serviceImages[service.slug] || images.services.logistics}
                           alt={service.title}
+                          loading="lazy"
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
@@ -250,6 +278,7 @@ export default function Home() {
                       <img
                         src={vehicle.images?.[0]?.url || vehicle.id ? (fleetImages[vehicle.type]?.[vehicle.id.charCodeAt(0) % 5] ?? images.fleet.truck[0]) : images.fleet.truck[0]}
                         alt={vehicle.name}
+                        loading="lazy"
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
@@ -348,7 +377,7 @@ export default function Home() {
                     <Card className="h-full overflow-hidden border-0 shadow-sm transition-shadow hover:shadow-md">
                       {post.coverImage && (
                         <div className="relative h-48 overflow-hidden">
-                          <img src={post.coverImage} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                          <img src={post.coverImage} alt={post.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                         </div>
                       )}
                       <CardContent className="p-6">
@@ -389,7 +418,7 @@ export default function Home() {
       {/* ─── CTA ─── */}
       <AnimatedSection className="relative overflow-hidden py-24" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
         <div className="absolute inset-0">
-          <img src={images.cta.background} alt="" className="h-full w-full object-cover opacity-20" />
+          <img src={images.cta.background} alt="" loading="lazy" className="h-full w-full object-cover opacity-20" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#163A5F]/90 to-[#163A5F]/70" />
         <div className="absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C29A4A]/5 blur-3xl" />

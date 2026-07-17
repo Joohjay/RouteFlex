@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/seo/SEO';
 import { Image, X, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import { usePublicGallery } from '@/hooks/usePublicData';
 import { AnimatedSection, AnimatedHero, AnimatedHeroItem } from '@/animations';
@@ -81,6 +81,7 @@ function Lightbox({
         <img
           src={current?.imageUrl}
           alt={current?.title ?? ''}
+          loading="lazy"
           className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain"
         />
         {(current?.title || current?.description) && (
@@ -99,16 +100,48 @@ export default function GalleryPage() {
   const [category, setCategory] = useState<string>('ALL');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const fallbackGallery = useMemo(() =>
-    images.gallery.items.map((url, i) => ({
-      id: `fallback-${i}`,
+  const fallbackGallery = useMemo(() => {
+    const existing = images.gallery.items.map((url, i) => ({
+      id: `gallery-${i}`,
       imageUrl: url,
       title: `JJ Transport ${['Fleet', 'Operations', 'Facility', 'Team', 'Logistics', 'Equipment'][i]}`,
       description: undefined,
       category: ['FLEET', 'OPERATIONS', 'FACILITY', 'TEAM', 'OPERATIONS', 'FLEET'][i],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-    })), []);
+    }));
+
+    const fleetNames: Record<string, readonly string[]> = {
+      van: ['JJ City Runner', 'JJ Metro Mover', 'JJ Urban Express', 'JJ Compact Hauler', 'JJ Swift Van', 'JJ Quick Transit', 'JJ Local Runner', 'JJ Town Van'],
+      truck: ['JJ Road King', 'JJ Freight Master', 'JJ Cargo Pro', 'JJ Long Haul', 'JJ Load Master', 'JJ Highway Cruiser', 'JJ Heavy Mover', 'JJ Transport Pro', 'JJ Hauler X', 'JJ Cargo King', 'JJ Freight Runner', 'JJ Load Runner'],
+      trailer: ['JJ Cargo Carrier', 'JJ Bulk Mover', 'JJ Secure Trailer', 'JJ Load Carrier', 'JJ Freight Trailer', 'JJ Cargo Master', 'JJ Haul Trailer', 'JJ Interlink', 'JJ Curtainsider', 'JJ Box Trailer'],
+      flatbed: ['JJ Flatbed Pro', 'JJ Open Carrier', 'JJ Heavy Loader', 'JJ Deck Master', 'JJ Flat Mover', 'JJ Oversize Hauler', 'JJ Platform King', 'JJ Trailer Flatbed'],
+      refrigerated: ['JJ Cold Chain', 'JJ Cool Runner', 'JJ Temp Control', 'JJ Chill Master', 'JJ Cold Carrier', 'JJ Freeze Pro', 'JJ Cool Mover', 'JJ Refrigerator Van'],
+      heavy: ['JJ Heavy King', 'JJ Massive Haul', 'JJ Oversize Pro', 'JJ Mega Mover', 'JJ Heavy Lifter', 'JJ Giant Trans', 'JJ Heavy Duty', 'JJ Lowbed King'],
+    };
+
+    const fleetGroups = [
+      { key: 'van' }, { key: 'truck' }, { key: 'trailer' },
+      { key: 'flatbed' }, { key: 'refrigerated' }, { key: 'heavy' },
+    ] as const;
+
+    const fleetImages = fleetGroups.flatMap(({ key }) =>
+      ((images.fleet as Record<string, readonly string[]>)[key] ?? []).map((url, i) => {
+        const names = fleetNames[key] ?? [];
+        return {
+          id: `fleet-${key}-${i}`,
+          imageUrl: url,
+          title: names[i % names.length] ?? `JJ ${key.charAt(0).toUpperCase() + key.slice(1)}`,
+          description: undefined,
+          category: 'FLEET' as const,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+      })
+    );
+
+    return [...fleetImages, ...existing];
+  }, []);
 
   const effectiveGallery = gallery && gallery.length > 0 ? gallery : fallbackGallery;
 
@@ -143,10 +176,11 @@ export default function GalleryPage() {
 
   return (
     <>
-      <Helmet>
-        <title>Gallery | JJ Transport</title>
-        <meta name="description" content="Browse our gallery showcasing JJ Transport's fleet, operations, team, and facilities." />
-      </Helmet>
+      <SEO
+  title="Gallery"
+  description="Browse our gallery showcasing JJ Transport's fleet, operations, team, and facilities in action across Tanzania."
+  canonical="/gallery"
+/>
 
       {/* Hero */}
       <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>

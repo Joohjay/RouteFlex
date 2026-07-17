@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { SectionHeader } from '@/components/common/SectionHeader';
+import { SEO } from '@/components/seo/SEO';
 
 const openings = [
   {
@@ -29,6 +30,11 @@ const openings = [
 export default function Careers() {
   return (
     <>
+      <SEO
+  title="Careers"
+  description="Join the JJ Transport team. Explore career opportunities in logistics, operations, and management in Dar es Salaam, Tanzania."
+  canonical="/careers"
+/>
       <section className="bg-gradient-to-br from-brand-900 to-brand-700 py-20 text-white">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <motion.h1

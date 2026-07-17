@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/seo/SEO';
 import { Search, Calendar, ArrowRight, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
 import { usePublicBlogPosts } from '@/hooks/usePublicData';
 import { Button } from '@/components/ui/Button';
@@ -24,7 +24,7 @@ function FeaturedPost({ post }: { post: BlogPost }) {
         <Card className="overflow-hidden border-0 shadow-sm transition-shadow hover:shadow-md">
           <div className="grid md:grid-cols-2">
             <div className="relative h-64 overflow-hidden md:h-full">
-              <img src={post.coverImage || images.blog.coverDefault} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              <img src={post.coverImage || images.blog.coverDefault} alt={post.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
             </div>
             <CardContent className="flex flex-col justify-center p-8">
               <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
@@ -64,7 +64,7 @@ function PostCard({ post, index }: { post: BlogPost; index: number }) {
       <Link to={`/blog/${post.slug}`} className="block h-full">
         <Card className="h-full overflow-hidden border-0 bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-gray-950">
           <div className="relative h-48 overflow-hidden">
-            <img src={post.coverImage || images.blog.coverDefault} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <img src={post.coverImage || images.blog.coverDefault} alt={post.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
           </div>
           <CardContent className="p-6">
             <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
@@ -123,10 +123,11 @@ export default function Blog() {
 
   return (
     <>
-      <Helmet>
-        <title>Blog | JJ Transport</title>
-        <meta name="description" content="Read the latest insights, updates, and stories from JJ Transport's logistics experts." />
-      </Helmet>
+      <SEO
+  title="Blog"
+  description="Read the latest insights, updates, and stories from JJ Transport's logistics experts covering the freight industry in Tanzania and East Africa."
+  canonical="/blog"
+/>
 
       {/* Hero */}
       <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>

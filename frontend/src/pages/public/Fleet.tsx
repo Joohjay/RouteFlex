@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/seo/SEO';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Truck, Search, FilterX } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -36,21 +36,65 @@ const groupImageMap: Record<ImageGroup, readonly string[]> = {
   HEAVY: images.fleet.heavy,
 };
 
-function fileNameToName(filename: string): string {
-  const withoutExt = filename.replace(/\.[^.]+$/, '');
-  return withoutExt
-    .replace(/[-_]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+const fleetNames: Record<ImageGroup, readonly string[]> = {
+  VAN: ['JJ City Runner', 'JJ Metro Mover', 'JJ Urban Express', 'JJ Compact Hauler', 'JJ Swift Van', 'JJ Quick Transit', 'JJ Local Runner', 'JJ Town Van'],
+  TRUCK: ['JJ Road King', 'JJ Freight Master', 'JJ Cargo Pro', 'JJ Long Haul', 'JJ Load Master', 'JJ Highway Cruiser', 'JJ Heavy Mover', 'JJ Transport Pro', 'JJ Hauler X', 'JJ Cargo King', 'JJ Freight Runner', 'JJ Load Runner'],
+  TRAILER: ['JJ Cargo Carrier', 'JJ Bulk Mover', 'JJ Secure Trailer', 'JJ Load Carrier', 'JJ Freight Trailer', 'JJ Cargo Master', 'JJ Haul Trailer', 'JJ Interlink', 'JJ Curtainsider', 'JJ Box Trailer'],
+  FLATBED: ['JJ Flatbed Pro', 'JJ Open Carrier', 'JJ Heavy Loader', 'JJ Deck Master', 'JJ Flat Mover', 'JJ Oversize Hauler', 'JJ Platform King', 'JJ Trailer Flatbed'],
+  REFRIGERATED: ['JJ Cold Chain', 'JJ Cool Runner', 'JJ Temp Control', 'JJ Chill Master', 'JJ Cold Carrier', 'JJ Freeze Pro', 'JJ Cool Mover', 'JJ Refrigerator Van'],
+  HEAVY: ['JJ Heavy King', 'JJ Massive Haul', 'JJ Oversize Pro', 'JJ Mega Mover', 'JJ Heavy Lifter', 'JJ Giant Trans', 'JJ Heavy Duty', 'JJ Lowbed King'],
+};
+
+const fleetDescriptions: Record<ImageGroup, readonly string[]> = {
+  VAN: [
+    'Compact and efficient van for local deliveries and small cargo. Ideal for city routes and quick turnarounds.',
+    'Perfect for last-mile delivery with easy maneuverability and secure cargo space.',
+    'Economical and reliable for daily urban logistics and courier services.',
+  ],
+  TRUCK: [
+    'Heavy-duty truck built for regional and long-haul freight. Handles large volumes with reliability and power.',
+    'Versatile cargo truck suitable for mixed freight across intercity and cross-border routes.',
+    'Built for endurance with advanced suspension and spacious cargo bed for bulk goods.',
+  ],
+  TRAILER: [
+    'Versatile trailer for secure and bulk cargo transport with easy loading and unloading access.',
+    'Designed for maximum cargo capacity while maintaining stability and safety on the road.',
+    'Ideal for consolidated freight requiring protection from elements and road conditions.',
+  ],
+  FLATBED: [
+    'Flatbed trailer ideal for oversized and heavy equipment that requires flexible loading options.',
+    'Open deck design allows for easy crane loading of machinery, pipes, and construction materials.',
+    'Perfect for irregularly shaped cargo that cannot fit inside standard enclosed trailers.',
+  ],
+  REFRIGERATED: [
+    'Temperature-controlled refrigerated unit for perishable goods requiring precise climate management.',
+    'Maintains consistent cold chain integrity for food, pharmaceuticals, and sensitive materials.',
+    'Equipped with advanced cooling system and real-time temperature monitoring for peace of mind.',
+  ],
+  HEAVY: [
+    'Specialized heavy-haul vehicle for oversized machinery and industrial equipment transport.',
+    'Engineered to handle extreme loads with reinforced chassis and multi-axle configuration.',
+    'Designed for moving construction equipment, mining machinery, and large industrial components.',
+  ],
+};
+
+function getFleetName(group: ImageGroup, index: number): string {
+  const names = fleetNames[group];
+  return names[index % names.length]!;
+}
+
+function getFleetDescription(group: ImageGroup, index: number): string {
+  const descriptions = fleetDescriptions[group];
+  return descriptions[index % descriptions.length]!;
 }
 
 const allGalleryItems: GalleryItem[] = (Object.entries(groupImageMap) as [ImageGroup, readonly string[]][]).flatMap(
   ([group, paths]) =>
-    paths.map((src) => {
-      const parts = src.split('/');
-      const filename = parts[parts.length - 1] ?? '';
-      return { src, name: fileNameToName(filename), group };
-    })
+    paths.map((src, index) => ({
+      src,
+      name: getFleetName(group, index),
+      group,
+    }))
 );
 
 function FleetCard({ item, index }: { item: GalleryItem; index: number }) {
@@ -67,6 +111,7 @@ function FleetCard({ item, index }: { item: GalleryItem; index: number }) {
           <img
             src={item.src}
             alt={item.name}
+            loading="lazy"
             className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
@@ -79,12 +124,7 @@ function FleetCard({ item, index }: { item: GalleryItem; index: number }) {
         <div className="p-5">
           <h3 className="text-lg font-bold">{item.name}</h3>
           <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-            {item.group === 'VAN' && 'Compact and efficient van for local deliveries & small cargo.'}
-            {item.group === 'TRUCK' && 'Heavy-duty truck built for regional and long-haul freight.'}
-            {item.group === 'TRAILER' && 'Versatile trailer for secure and bulk cargo transport.'}
-            {item.group === 'FLATBED' && 'Flatbed trailer ideal for oversized and heavy equipment.'}
-            {item.group === 'REFRIGERATED' && 'Temperature-controlled refrigerated unit for perishable goods.'}
-            {item.group === 'HEAVY' && 'Specialized heavy-haul vehicle for oversized machinery.'}
+            {getFleetDescription(item.group, index)}
           </p>
         </div>
       </PremiumCard>
@@ -117,10 +157,11 @@ export default function Fleet() {
 
   return (
     <>
-      <Helmet>
-        <title>Our Fleet | JJ Transport</title>
-        <meta name="description" content="Explore JJ Transport's modern fleet of vehicles including vans, trucks, trailers, flatbeds, and refrigerated transport." />
-      </Helmet>
+      <SEO
+  title="Our Fleet"
+  description="Explore JJ Transport's modern fleet of vehicles including vans, trucks, trailers, flatbeds, and refrigerated transport for all your cargo needs in Tanzania."
+  canonical="/fleet"
+/>
 
       {/* Hero */}
       <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>

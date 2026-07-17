@@ -35,20 +35,20 @@ export function PublicFooter() {
   return (
     <footer className="relative bg-[#163A5F] text-gray-300">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#C29A4A]/[0.02] to-transparent" />
-      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5">
+      <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <Link to="/" className="inline-block">
               <img
                 src="/images/logo/jj-transports-logo-truck-centerpiece-removebg-preview.png"
                 alt="JJ Transport"
-                className="h-[250px] w-auto"
+                className="h-24 w-auto"
               />
             </Link>
-            <p className="mt-4 max-w-sm leading-relaxed text-gray-400">
+            <p className="mt-3 max-w-sm text-sm leading-relaxed text-gray-400">
               {company?.tagline ?? 'Premium freight and logistics solutions for businesses of all sizes. We deliver with precision, care, and reliability.'}
             </p>
-            <div className="mt-6 flex gap-3">
+            <div className="mt-4 flex gap-2">
               {settings?.facebookUrl && (
                 <a href={settings.facebookUrl} target="_blank" rel="noreferrer" className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 text-gray-400 transition-colors hover:bg-[#C29A4A] hover:text-[#163A5F]">
                   <Facebook size={16} />

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quote Ready</title>
+  <style>
+    body { margin: 0; padding: 0; background: #F8F8F6; font-family: 'Segoe UI', Inter, -apple-system, sans-serif; }
+    .container { max-width: 600px; margin: 0 auto; padding: 32px 24px; }
+    .card { background: #FFFFFF; border-radius: 16px; padding: 40px 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .logo { text-align: center; margin-bottom: 32px; }
+    .logo img { max-height: 64px; }
+    .badge { display: inline-block; background: #FFF4E5; color: #C29A4A; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    h1 { font-size: 28px; color: #1B1B1D; margin-top: 16px; margin-bottom: 8px; }
+    .subtitle { color: #5E646B; font-size: 16px; line-height: 1.5; margin-bottom: 32px; }
+    .price-box { background: #F2F4F6; border-radius: 12px; padding: 24px; text-align: center; margin-bottom: 24px; }
+    .price-amount { font-size: 42px; font-weight: 800; color: #163A5F; }
+    .price-label { color: #5E646B; font-size: 14px; margin-top: 4px; }
+    .cta { display: inline-block; background: #163A5F; color: #FFFFFF; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 15px; }
+    .cta-gold { display: inline-block; background: #C29A4A; color: #163A5F; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 15px; margin-left: 12px; }
+    .footer { text-align: center; padding-top: 32px; color: #5E646B; font-size: 13px; }
+    .footer a { color: #C29A4A; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="logo">
+        <img src="https://routeflex.vercel.app/images/logo/jj-transports-logo-truck-centerpiece-removebg-preview.png" alt="JJ Transport" />
+      </div>
+      <div style="text-align: center;">
+        <span class="badge">Quote Ready</span>
+        <h1>Your Transport Quote Is Ready</h1>
+        <p class="subtitle">Review your personalized quote below. We are available to answer any questions.</p>
+      </div>
+      <div class="price-box">
+        <div class="price-amount">{{currency}} {{totalPrice}}</div>
+        <div class="price-label">Estimated total for {{service}} &bull; Ref: {{referenceNumber}}</div>
+      </div>
+      <p><strong>Breakdown:</strong></p>
+      <p style="color:#5E646B; font-size:14px; line-height:1.8;">
+        Base Rate: {{currency}} {{baseRate}}<br />
+        {{#if distance}}Distance: {{distance}} km @ {{currency}} {{ratePerKm}}/km = {{currency}} {{distanceCost}}<br />{{/if}}
+        {{#if weight}}Weight Surcharge: {{currency}} {{weightSurcharge}}<br />{{/if}}
+        {{#if insurance}}Insurance: {{currency}} {{insurance}}<br />{{/if}}
+        {{#if tax}}Tax ({{taxRate}}%): {{currency}} {{tax}}<br />{{/if}}
+      </p>
+      <div style="text-align: center; margin-top: 32px;">
+        <a href="https://routeflex.vercel.app/book?ref={{referenceNumber}}" class="cta">Accept Quote</a>
+        <a href="https://wa.me/255685959574?text=Hello%20JJ%20Transport%2C%20I%20have%20a%20question%20about%20quote%20{{referenceNumber}}" class="cta-gold">Ask a Question</a>
+      </div>
+      <div class="footer">
+        <p>JJ Transport &bull; Dar es Salaam, Tanzania</p>
+        <p><a href="tel:+255685959574">+255 685 959 574</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

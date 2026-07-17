@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import { AdminLayout } from '@/components/layout/AdminLayout';
-import { Loading } from '@/components/common/Loading';
+import { HeroSkeleton } from '@/components/ui/Skeleton';
 
 // Public pages
 const Home = lazy(() => import('@/pages/public/Home'));
@@ -20,6 +20,7 @@ const Careers = lazy(() => import('@/pages/public/Careers'));
 const Blog = lazy(() => import('@/pages/public/Blog'));
 const BlogPost = lazy(() => import('@/pages/public/BlogPost'));
 const NotFound = lazy(() => import('@/pages/public/NotFound'));
+const ServerError = lazy(() => import('@/pages/public/ServerError'));
 
 // Auth pages
 const Login = lazy(() => import('@/pages/admin/Login'));
@@ -39,7 +40,7 @@ const NotificationsAdmin = lazy(() => import('@/pages/admin/Notifications'));
 const SettingsAdmin = lazy(() => import('@/pages/admin/Settings'));
 
 function PageWrapper({ children }: { children: React.ReactNode }) {
-  return <Suspense fallback={<Loading className="min-h-[60vh]" />}>{children}</Suspense>;
+  return <Suspense fallback={<HeroSkeleton />}>{children}</Suspense>;
 }
 
 export function AppRoutes() {
@@ -62,6 +63,7 @@ export function AppRoutes() {
         <Route path="blog/:slug" element={<PageWrapper><BlogPost /></PageWrapper>} />
         <Route path="login" element={<PageWrapper><Login /></PageWrapper>} />
         <Route path="register" element={<PageWrapper><Register /></PageWrapper>} />
+        <Route path="500" element={<PageWrapper><ServerError /></PageWrapper>} />
       </Route>
 
       <Route path="/admin" element={<AdminLayout />}>

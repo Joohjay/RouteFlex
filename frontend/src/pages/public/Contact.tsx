@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/seo/SEO';
 import { Mail, Phone, MapPin, Clock, Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -77,10 +77,11 @@ export default function Contact() {
 
   return (
     <>
-      <Helmet>
-        <title>Contact Us | JJ Transport</title>
-        <meta name="description" content="Get in touch with JJ Transport for freight and logistics inquiries. Contact our team for quotes, support, and partnerships." />
-      </Helmet>
+      <SEO
+  title="Contact Us"
+  description="Get in touch with JJ Transport for freight and logistics inquiries. Contact our team for quotes, support, and partnerships in Dar es Salaam, Tanzania."
+  canonical="/contact"
+/>
 
       {/* Hero */}
       <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>
@@ -136,7 +137,7 @@ export default function Contact() {
               {/* Office image */}
               <div className="mt-10 overflow-hidden rounded-2xl border">
                 <div className="relative h-56">
-                  <img src={images.contact.office} alt="Our office" className="h-full w-full object-cover" />
+                  <img src={images.contact.office} alt="Our office" loading="lazy" className="h-full w-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                   <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white">
                     <MapPin size={16} className="text-[#C29A4A]" />

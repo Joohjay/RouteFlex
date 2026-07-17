@@ -1,5 +1,7 @@
+import { useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { useDashboardReveal } from '@/animations/cinematic';
 import {
   BarChart,
   Bar,
@@ -65,6 +67,8 @@ function RequestStatusDot({ status }: { status: string }) {
 }
 
 export default function Dashboard() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  useDashboardReveal(containerRef, []);
   const { data: stats, isLoading } = useQuery<DashboardStats>({
     queryKey: ['dashboard', 'stats'],
     queryFn: async () => {
@@ -94,17 +98,18 @@ export default function Dashboard() {
 
   return (
     <motion.div
+      ref={containerRef}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div data-dashboard-card variants={itemVariants}>
         <h1 className="text-3xl font-bold">Dashboard</h1>
         <p className="text-muted-foreground">Overview of your logistics operations.</p>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <motion.div variants={itemVariants} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-dashboard-card>
         <StatsCard
           label="Total Requests"
           value={stats?.totalRequests ?? 0}
@@ -129,13 +134,13 @@ export default function Dashboard() {
         />
       </motion.div>
 
-      <motion.div variants={itemVariants} className="grid gap-6 lg:grid-cols-2">
+      <motion.div variants={itemVariants} className="grid gap-6 lg:grid-cols-2" data-dashboard-card>
         <Card>
           <CardHeader>
             <CardTitle>Monthly Requests</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px]">
+            <div className="h-[300px]" data-dashboard-chart>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -166,11 +171,12 @@ export default function Dashboard() {
             <CardTitle>Popular Routes</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-4" data-dashboard-table>
               {(stats?.popularRoutes ?? []).length > 0 ? (
                 stats!.popularRoutes.map((route, index) => (
                   <motion.div
                     key={index}
+                    data-dashboard-row
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.08 }}
@@ -201,11 +207,12 @@ export default function Dashboard() {
             <CardTitle>Fleet Overview</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-4" data-dashboard-table>
               {(stats?.fleetOverview ?? []).length > 0 ? (
                 stats!.fleetOverview.map((item, index) => (
                   <motion.div
                     key={index}
+                    data-dashboard-row
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.08 }}
@@ -230,11 +237,12 @@ export default function Dashboard() {
             <CardTitle>Recent Requests</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-4" data-dashboard-table>
               {(stats?.recentRequests ?? []).length > 0 ? (
                 stats!.recentRequests.slice(0, 5).map((request, index) => (
                   <motion.div
                     key={request.id}
+                    data-dashboard-row
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.08 }}

@@ -1,7 +1,7 @@
 import { Package, Truck, Snowflake, ArrowRight, Shield, Clock, MapPin, TrendingUp, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '@/components/seo/SEO';
 import { usePublicServices } from '@/hooks/usePublicData';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -41,7 +41,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
       <Link to={`/services/${service.slug}`} className="block h-full">
         <Card className="relative h-full overflow-hidden border-0 bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-gray-950">
           <div className="relative h-44 overflow-hidden">
-            <img src={imgSrc} alt={service.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <img src={imgSrc} alt={service.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
             <div className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#C29A4A] text-white shadow-lg">
               <Icon size={24} />
@@ -68,10 +68,11 @@ export default function Services() {
 
   return (
     <>
-      <Helmet>
-        <title>Our Services | JJ Transport</title>
-        <meta name="description" content="Explore JJ Transport's comprehensive freight and logistics services including local delivery, long haul, refrigerated, and heavy haul transport." />
-      </Helmet>
+      <SEO
+  title="Our Services"
+  description="Explore JJ Transport's comprehensive freight and logistics services including local delivery, long haul, refrigerated, and heavy haul transport across Tanzania."
+  canonical="/services"
+/>
 
       {/* Hero */}
       <section className="relative overflow-hidden py-28 lg:py-36" style={{ background: 'linear-gradient(135deg, #163A5F 0%, #204B74 55%, #2A5F90 100%)' }}>

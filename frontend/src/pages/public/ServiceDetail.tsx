@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/common/Loading';
 import { usePublicServices } from '@/hooks/usePublicData';
+import { SEO } from '@/components/seo/SEO';
 
 export default function ServiceDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -27,6 +28,7 @@ export default function ServiceDetail() {
 
   return (
     <>
+      <SEO title={service?.title ?? 'Service Details'} description={service?.summary ?? service?.description ?? 'Learn more about this service from JJ Transport.'} canonical={`/services/${slug}`} />
       <section className="bg-gradient-to-br from-brand-900 to-brand-700 py-20 text-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -47,6 +49,7 @@ export default function ServiceDetail() {
             <img
               src={service.imageUrl}
               alt={service.title}
+              loading="lazy"
               className="mb-8 w-full rounded-2xl object-cover"
             />
           )}
