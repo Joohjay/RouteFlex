@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Phone, ArrowRight, ChevronRight } from 'lucide-react';
+import { Menu, X, Phone, Mail, ArrowRight, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { ThemeToggle } from '@/components/common/ThemeToggle';
-import { usePublicProfile } from '@/hooks/usePublicData';
 import { useAuthStore } from '@/stores/authStore';
 import { cn } from '@/lib/utils';
+
+const CONTACT_PHONE = '+255 685 959 574';
+const CONTACT_EMAIL = 'japhetjohnson377@gmail.com';
 
 const navLinks = [
   { label: 'Home', href: '/' },
@@ -41,9 +43,7 @@ const linkItemVariants = {
 export function PublicNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { pathname } = useLocation();
-  const { data } = usePublicProfile();
   const { user } = useAuthStore();
-  const company = data?.company;
 
   useEffect(() => {
     setIsOpen(false);
@@ -57,10 +57,11 @@ export function PublicNavbar() {
   const close = useCallback(() => setIsOpen(false), []);
 
   return (
-    <header className="fixed top-0 z-50 w-full bg-[#0a0e1a]/95 shadow-sm">
+    <header className="fixed top-0 z-50 w-full bg-[#163A5F]/95 shadow-sm">
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link to="/" className="group flex items-center gap-3">
-          <img
+          <motion.img
+            whileHover={{ scale: 1.03, rotate: -1, filter: 'brightness(1.1)' }}
             src="/images/logo/jj-transports-logo-truck-centerpiece-removebg-preview.png"
             alt="JJ Transport"
             className="h-[150px] w-auto"
@@ -77,14 +78,14 @@ export function PublicNavbar() {
                 to={link.href}
                 className={cn(
                   'relative rounded-lg px-4 py-2 text-sm font-medium transition-colors text-white/80 hover:text-white',
-                  isActive && 'text-[#f59e0b]'
+                  isActive && 'text-[#C29A4A]'
                 )}
               >
                 {link.label}
                 {isActive && (
                   <motion.span
                     layoutId="nav-underline"
-                    className="absolute -bottom-0.5 left-2 right-2 h-0.5 rounded-full bg-[#f59e0b]"
+                    className="absolute -bottom-0.5 left-2 right-2 h-0.5 rounded-full bg-[#C29A4A]"
                   />
                 )}
               </Link>
@@ -94,18 +95,12 @@ export function PublicNavbar() {
 
         {/* Desktop actions */}
         <div className="hidden items-center gap-3 lg:flex">
-          {company?.phone && (
-            <a
-              href={`tel:${company.phone}`}
-              className="flex items-center gap-2 text-sm font-medium text-white/80 transition-colors hover:text-white"
-            >
-              <Phone size={15} />
-              {company.phone}
-            </a>
-          )}
+          <a href={`mailto:${CONTACT_EMAIL}`} className="flex items-center gap-1.5 text-sm font-medium text-white/60 transition-colors hover:text-white">
+            <Mail size={14} />
+          </a>
           <ThemeToggle />
           {user ? (
-            <Button asChild variant="outline" size="sm" className="border-[#f59e0b] text-[#f59e0b] hover:bg-[#f59e0b] hover:text-[#0f172a]">
+            <Button asChild variant="outline" size="sm" className="border-[#C29A4A] text-[#C29A4A] hover:bg-[#C29A4A] hover:text-[#163A5F]">
               <Link to="/admin">Dashboard</Link>
             </Button>
           ) : (
@@ -113,7 +108,7 @@ export function PublicNavbar() {
               <Link to="/login">Login</Link>
             </Button>
           )}
-          <Button asChild size="sm" className="bg-[#f59e0b] text-[#0f172a] hover:bg-[#d97706] shadow-lg shadow-[#f59e0b]/25">
+          <Button asChild size="sm" className="bg-[#C29A4A] text-[#163A5F] hover:bg-[#B8863A] shadow-lg shadow-[#C29A4A]/25">
             <Link to="/book">
               Book Transport
               <ArrowRight size={15} className="ml-1.5" />
@@ -156,7 +151,7 @@ export function PublicNavbar() {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col border-l border-white/10 bg-[#0a0e1a] shadow-2xl lg:hidden"
+              className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col border-l border-white/10 bg-[#163A5F] shadow-2xl lg:hidden"
             >
               <div className="flex items-center justify-between px-6 pt-6">
                 <span className="text-lg font-bold text-white">Menu</span>
@@ -186,12 +181,12 @@ export function PublicNavbar() {
                         className={cn(
                           'flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-medium transition-colors',
                           isActive
-                            ? 'bg-[#f59e0b]/10 text-[#f59e0b]'
+                            ? 'bg-[#C29A4A]/10 text-[#C29A4A]'
                             : 'text-gray-300 hover:bg-white/5 hover:text-white'
                         )}
                       >
                         {link.label}
-                        <ChevronRight size={16} className={cn(isActive ? 'text-[#f59e0b]' : 'text-gray-600')} />
+                        <ChevronRight size={16} className={cn(isActive ? 'text-[#C29A4A]' : 'text-gray-600')} />
                       </Link>
                     </motion.div>
                   );
@@ -213,21 +208,20 @@ export function PublicNavbar() {
                     </Button>
                   </>
                 )}
-                <Button asChild className="w-full bg-[#f59e0b] text-[#0a0e1a] hover:bg-[#d97706]" onClick={close}>
+                <Button asChild className="w-full bg-[#C29A4A] text-[#163A5F] hover:bg-[#B8863A]" onClick={close}>
                   <Link to="/book">
                     Book Transport
                     <ArrowRight size={16} className="ml-2" />
                   </Link>
                 </Button>
-                {company?.phone && (
-                  <a
-                    href={`tel:${company.phone}`}
-                    className="flex items-center justify-center gap-2 pt-2 text-sm text-gray-400 hover:text-white"
-                  >
-                    <Phone size={14} />
-                    {company.phone}
+                <div className="flex flex-col items-center gap-2 pt-2">
+                  <a href={`tel:${CONTACT_PHONE}`} className="flex items-center gap-2 text-sm text-gray-400 hover:text-white">
+                    <Phone size={14} /> {CONTACT_PHONE}
                   </a>
-                )}
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="flex items-center gap-2 text-sm text-gray-400 hover:text-white">
+                    <Mail size={14} /> {CONTACT_EMAIL}
+                  </a>
+                </div>
               </div>
             </motion.div>
           </>
