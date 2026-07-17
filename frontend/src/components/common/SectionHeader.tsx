@@ -20,7 +20,7 @@ export function SectionHeader({ title, subtitle, centered = false, className, li
     >
       <h2
         className={cn(
-          'text-3xl font-bold tracking-tight sm:text-4xl',
+          'text-3xl font-bold tracking-tight sm:text-4xl font-heading',
           light ? 'text-white' : 'text-foreground'
         )}
       >
