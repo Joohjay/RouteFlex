@@ -59,7 +59,7 @@ export function StatsCard({
     >
       <div className="flex items-start justify-between">
         <div className="space-y-1">
-          <p className="text-sm text-[#f59e0b]/80">{label}</p>
+          <p className="text-sm text-[#C29A4A]/80">{label}</p>
           <p className="text-3xl font-bold tracking-tight">
             {displayValue || `${prefix}${count.toLocaleString()}${suffix}`}
           </p>
@@ -70,7 +70,7 @@ export function StatsCard({
           )}
         </div>
         {Icon && (
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#f59e0b]/10 text-[#f59e0b]">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#C29A4A]/10 text-[#C29A4A]">
             <Icon size={20} />
           </div>
         )}

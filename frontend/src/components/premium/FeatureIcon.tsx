@@ -9,9 +9,9 @@ interface FeatureIconProps {
 }
 
 const variantStyles: Record<string, string> = {
-  gold: 'bg-[#f59e0b]/10 text-[#f59e0b] group-hover:bg-[#f59e0b] group-hover:text-white',
-  navy: 'bg-[#0f172a]/10 text-[#0f172a] dark:bg-white/10 dark:text-white',
-  outline: 'border border-[#f59e0b]/30 text-[#f59e0b] bg-transparent',
+  gold: 'bg-[#C29A4A]/10 text-[#C29A4A] group-hover:bg-[#C29A4A] group-hover:text-white',
+  navy: 'bg-[#163A5F]/10 text-[#163A5F] dark:bg-white/10 dark:text-white',
+  outline: 'border border-[#C29A4A]/30 text-[#C29A4A] bg-transparent',
 };
 
 export function FeatureIcon({ icon: Icon, size = 24, variant = 'gold', className }: FeatureIconProps) {

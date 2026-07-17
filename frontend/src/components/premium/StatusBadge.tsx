@@ -51,7 +51,7 @@ const statusConfig: Record<string, { label: string; dot: string; bg: string; tex
   },
   PICKED_UP: {
     label: 'Picked Up',
-    dot: 'bg-[#f59e0b]',
+    dot: 'bg-[#C29A4A]',
     bg: 'bg-amber-50 dark:bg-amber-950',
     text: 'text-amber-700 dark:text-amber-300',
   },

@@ -33,9 +33,9 @@ export function StepProgress({ steps, currentStep, className }: StepProgressProp
                     className={cn(
                       'flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-semibold transition-all',
                       isCompleted
-                        ? 'border-[#f59e0b] bg-[#f59e0b] text-white'
+                        ? 'border-[#C29A4A] bg-[#C29A4A] text-white'
                         : isCurrent
-                        ? 'border-[#f59e0b] bg-[#f59e0b]/10 text-[#f59e0b]'
+                        ? 'border-[#C29A4A] bg-[#C29A4A]/10 text-[#C29A4A]'
                         : 'border-gray-200 bg-white text-gray-400 dark:border-gray-700 dark:bg-gray-900'
                     )}
                   >
@@ -44,7 +44,7 @@ export function StepProgress({ steps, currentStep, className }: StepProgressProp
                   <span
                     className={cn(
                       'mt-2 text-xs font-medium',
-                      isCurrent || isCompleted ? 'text-[#f59e0b]' : 'text-gray-400'
+                      isCurrent || isCompleted ? 'text-[#C29A4A]' : 'text-gray-400'
                     )}
                   >
                     {step.label}
@@ -58,7 +58,7 @@ export function StepProgress({ steps, currentStep, className }: StepProgressProp
                       initial={{ width: '0%' }}
                       animate={{ width: isCompleted ? '100%' : '0%' }}
                       transition={{ duration: 0.4 }}
-                      className="absolute inset-0 bg-[#f59e0b]"
+                      className="absolute inset-0 bg-[#C29A4A]"
                     />
                   </div>
                 )}
@@ -74,7 +74,7 @@ export function StepProgress({ steps, currentStep, className }: StepProgressProp
           key={currentStep}
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-full bg-[#f59e0b]/10 px-4 py-1.5 text-sm font-medium text-[#f59e0b]"
+          className="rounded-full bg-[#C29A4A]/10 px-4 py-1.5 text-sm font-medium text-[#C29A4A]"
         >
           Step {currentStep} of {steps.length}: {steps[currentStep - 1]?.label}
         </motion.span>

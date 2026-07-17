@@ -52,9 +52,9 @@ export function Timeline({ events, className }: TimelineProps) {
             <div className="min-w-0 flex-1 pt-1">
               <p className="font-semibold">{event.label}</p>
               {event.description && (
-                <p className="mt-0.5 text-sm text-[#f59e0b]/70">{event.description}</p>
+                <p className="mt-0.5 text-sm text-[#C29A4A]/70">{event.description}</p>
               )}
-              <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-[#f59e0b]/60">
+              <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-[#C29A4A]/60">
                 <span className="inline-flex items-center gap-1">
                   <Clock size={11} />
                   {new Date(event.timestamp).toLocaleString('en-US', {
