@@ -28,6 +28,7 @@ import { AnimatedSection, AnimatedCard, AnimatedGrid, AnimatedHero, AnimatedHero
 import { images } from '@/lib/images';
 import { SEO } from '@/components/seo/SEO';
 import { HeroCinematic } from '@/animations/cinematic';
+import { ThreeHero } from '@/3d/scenes/HeroScene';
 
 const heroGlowVariants = {
   animate: {
@@ -107,6 +108,7 @@ export default function Home() {
           animate="animate"
           className="absolute left-1/2 top-1/4 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C29A4A]/10 blur-3xl"
         />
+        <ThreeHero className="pointer-events-none absolute bottom-0 right-0 h-full w-1/2 opacity-40 lg:opacity-60" />
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#163A5F] to-transparent" />
 
         <div className="relative mx-auto flex min-h-[90vh] max-w-7xl items-center px-4 sm:px-6 lg:px-8">
