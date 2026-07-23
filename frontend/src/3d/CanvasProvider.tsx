@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { Suspense } from 'react';
+import { Suspense, Component } from 'react';
 
 interface CanvasProviderProps {
   children: React.ReactNode;
@@ -15,6 +15,19 @@ const defaultFallback = (
   <div className="flex h-full w-full items-center justify-center bg-[#0F1F2E]" />
 );
 
+class CanvasErrorBoundary extends Component<{ children: React.ReactNode; fallback: React.ReactNode }> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) return this.props.fallback;
+    return this.props.children;
+  }
+}
+
 export function CanvasProvider({
   children,
   className,
@@ -26,23 +39,25 @@ export function CanvasProvider({
 }: CanvasProviderProps) {
   return (
     <div className={className}>
-      <Canvas
-        camera={camera}
-        dpr={dpr}
-        gl={{
-          antialias: gl.antialias,
-          alpha: gl.alpha,
-          powerPreference: 'high-performance' as const,
-          stencil: false,
-          depth: true,
-        }}
-        onCreated={onCreated}
-        style={{ width: '100%', height: '100%' }}
-      >
-        <Suspense fallback={fallback}>
-          {children}
-        </Suspense>
-      </Canvas>
+      <CanvasErrorBoundary fallback={fallback}>
+        <Canvas
+          camera={camera}
+          dpr={dpr}
+          gl={{
+            antialias: gl.antialias,
+            alpha: gl.alpha,
+            powerPreference: 'high-performance' as const,
+            stencil: false,
+            depth: true,
+          }}
+          onCreated={onCreated}
+          style={{ width: '100%', height: '100%' }}
+        >
+          <Suspense fallback={fallback}>
+            {children}
+          </Suspense>
+        </Canvas>
+      </CanvasErrorBoundary>
     </div>
   );
 }
