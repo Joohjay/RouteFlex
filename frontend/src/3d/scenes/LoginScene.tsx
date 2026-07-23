@@ -6,6 +6,7 @@ import { CameraController } from '../CameraController';
 import { TruckModel } from '../models/createTruck';
 import { TrailerModel } from '../models/createTrailer';
 import { ContainerModel } from '../models/createContainer';
+import type { ContainerHandle } from '../models/createContainer';
 import { WarehouseModel, WarehouseFloor } from '../models/createWarehouse';
 import { gsap } from '@/animations/hooks/useGSAP';
 import { useReducedMotion } from '@/animations/hooks';
@@ -19,21 +20,23 @@ interface LoginSceneProps {
   onComplete?: () => void;
 }
 
-function Login3DContent({ onReady }: { onReady: () => void }) {
-  const truckRef = useRef<THREE.Group>(null);
-  const trailerRef = useRef<THREE.Group>(null);
-  const containerRef = useRef<THREE.Group>(null);
-  const warehouseRef = useRef<THREE.Group>(null);
+interface SceneRefs {
+  group: THREE.Group | null;
+  container: ContainerHandle | null;
+}
+
+function Login3DContent({ onReady, sceneRefs }: { onReady: () => void; sceneRefs: React.MutableRefObject<SceneRefs> }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const containerHandleRef = useRef<ContainerHandle>(null);
 
   useEffect(() => {
-    if (!truckRef.current || !trailerRef.current || !containerRef.current) return;
+    const group = groupRef.current;
+    const handle = containerHandleRef.current;
+    if (!group || !handle) return;
 
-    const group = new THREE.Group();
-    group.add(truckRef.current);
-    group.add(trailerRef.current);
-    group.add(containerRef.current);
+    sceneRefs.current = { group, container: handle };
 
-    group.position.set(-6, 0, 0);
+    group.position.set(10, 0, 0);
 
     const tl = gsap.timeline({
       onComplete: onReady,
@@ -42,51 +45,44 @@ function Login3DContent({ onReady }: { onReady: () => void }) {
 
     tl.to(group.position, {
       x: 0,
-      duration: 2.5,
+      duration: 2.2,
       ease: 'power2.out',
     });
 
-    tl.to({}, { duration: 0.4 });
+    tl.to({}, { duration: 0.3 });
 
-    tl.to(containerRef.current!.position, {
-      z: -1.8,
-      duration: 1.2,
-      ease: 'power3.out',
-    });
-
-    tl.to(containerRef.current!.rotation, {
-      y: Math.PI,
-      duration: 0.8,
-      ease: 'power2.out',
-    }, '-=1.0');
-
-    tl.to(containerRef.current!.position, {
-      x: 2.5,
-      duration: 1.0,
-      ease: 'power2.out',
-    });
-
-    tl.set(containerRef.current!, { visible: false });
+    if (handle.leftDoor && handle.rightDoor) {
+      tl.to(handle.leftDoor.rotation, {
+        y: 0.65,
+        duration: 1.0,
+        ease: 'back.out(1.2)',
+      }, 0);
+      tl.to(handle.rightDoor.rotation, {
+        y: -0.65,
+        duration: 1.0,
+        ease: 'back.out(1.2)',
+      }, 0);
+    }
 
     return () => { tl.kill(); };
-  }, [onReady]);
+  }, [onReady, sceneRefs]);
 
   return (
     <>
       <CameraController target={[0, 1.5, 0]} offset={[0, 2.5, 7]} lerpSpeed={0.03} />
       <SceneLighting />
       <WarehouseFloor />
-      <group ref={warehouseRef}>
-        <WarehouseModel />
-      </group>
-      <group ref={truckRef} position={[-1.5, 0, 0]}>
-        <TruckModel />
-      </group>
-      <group ref={trailerRef} position={[1.5, 0, 0]}>
-        <TrailerModel />
-      </group>
-      <group ref={containerRef} position={[2.5, 0, 0]}>
-        <ContainerModel open />
+      <WarehouseModel />
+      <group ref={groupRef}>
+        <group position={[0, 0.4, 0]}>
+          <TruckModel />
+        </group>
+        <group position={[-1.8, 0, 0]}>
+          <TrailerModel />
+        </group>
+        <group position={[-1.8, 0, 0]}>
+          <ContainerModel ref={containerHandleRef} />
+        </group>
       </group>
     </>
   );
@@ -98,20 +94,45 @@ export const LoginScene = forwardRef<LoginSceneHandle, LoginSceneProps>(
   const [sceneReady, setSceneReady] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
   const [exiting, setExiting] = useState(false);
-  const resolveRef = useRef<(() => void) | null>(null);
+  const sceneRefs = useRef<SceneRefs>({ group: null, container: null });
 
   const handleSceneReady = useCallback(() => {
     setSceneReady(true);
-    setTimeout(() => setShowPanel(true), 300);
+    setTimeout(() => setShowPanel(true), 400);
     onComplete?.();
   }, [onComplete]);
 
   const playExit = useCallback(() => {
     return new Promise<void>((resolve) => {
-      resolveRef.current = resolve;
+      const { group, container } = sceneRefs.current;
+
       setShowPanel(false);
       setExiting(true);
-      setTimeout(() => resolve(), 1000);
+
+      const exitTl = gsap.timeline({ defaults: { ease: 'power3.in' } });
+
+      if (container?.leftDoor && container?.rightDoor) {
+        exitTl.to(container.leftDoor.rotation, {
+          y: 0,
+          duration: 0.4,
+          ease: 'power2.in',
+        }, 0);
+        exitTl.to(container.rightDoor.rotation, {
+          y: 0,
+          duration: 0.4,
+          ease: 'power2.in',
+        }, 0);
+      }
+
+      if (group) {
+        exitTl.to(group.position, {
+          x: -10,
+          duration: 1.2,
+          ease: 'power2.in',
+        }, '-=0.2');
+      }
+
+      exitTl.call(() => resolve());
     });
   }, []);
 
@@ -125,7 +146,7 @@ export const LoginScene = forwardRef<LoginSceneHandle, LoginSceneProps>(
     return (
       <div className="relative min-h-screen bg-[#0F1F2E]">
         <CanvasProvider className="absolute inset-0 h-full w-full">
-          <Login3DContent onReady={handleSceneReady} />
+          <Login3DContent onReady={handleSceneReady} sceneRefs={sceneRefs} />
         </CanvasProvider>
         {showPanel && (
           <div className="fixed left-1/2 top-1/2 z-20 w-full max-w-md -translate-x-1/2 -translate-y-1/2 px-4">

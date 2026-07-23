@@ -1,10 +1,24 @@
-import { useMemo } from 'react';
+import { useMemo, useRef, forwardRef, useImperativeHandle } from 'react';
+import type * as THREE from 'three';
 import { createContainerMaterial, createMetal } from '../materials/PremiumMaterial';
 
-export function ContainerModel({ open = false }: { color?: string; open?: boolean }) {
+export interface ContainerHandle {
+  leftDoor: THREE.Group | null;
+  rightDoor: THREE.Group | null;
+}
+
+export const ContainerModel = forwardRef<ContainerHandle, { color?: string; open?: boolean }>(
+  function ContainerModel(_props, ref) {
   const bodyMat = useMemo(() => createContainerMaterial('#C29A4A'), []);
   const doorMat = useMemo(() => createContainerMaterial('#B8863A'), []);
   const metalMat = useMemo(() => createMetal(), []);
+  const leftDoorRef = useRef<THREE.Group>(null);
+  const rightDoorRef = useRef<THREE.Group>(null);
+
+  useImperativeHandle(ref, () => ({
+    leftDoor: leftDoorRef.current,
+    rightDoor: rightDoorRef.current,
+  }));
 
   return (
     <group position={[0, 0.6, 0]}>
@@ -54,22 +68,18 @@ export function ContainerModel({ open = false }: { color?: string; open?: boolea
         <primitive object={metalMat} attach="material" />
       </mesh>
 
-      {open && (
-        <>
-          <group position={[0.6, 0.5, -0.1]} rotation={[0, -0.4, 0]}>
-            <mesh position={[0, 0, 0.8]}>
-              <boxGeometry args={[0.02, 0.85, 0.7]} />
-              <primitive object={doorMat} attach="material" />
-            </mesh>
-          </group>
-          <group position={[-0.6, 0.5, -0.1]} rotation={[0, 0.4, 0]}>
-            <mesh position={[0, 0, 0.8]}>
-              <boxGeometry args={[0.02, 0.85, 0.7]} />
-              <primitive object={doorMat} attach="material" />
-            </mesh>
-          </group>
-        </>
-      )}
+      <group ref={leftDoorRef} position={[-0.6, 0.5, -0.1]} rotation={[0, 0, 0]}>
+        <mesh position={[0, 0, 0.8]}>
+          <boxGeometry args={[0.02, 0.85, 0.7]} />
+          <primitive object={doorMat} attach="material" />
+        </mesh>
+      </group>
+      <group ref={rightDoorRef} position={[0.6, 0.5, -0.1]} rotation={[0, 0, 0]}>
+        <mesh position={[0, 0, 0.8]}>
+          <boxGeometry args={[0.02, 0.85, 0.7]} />
+          <primitive object={doorMat} attach="material" />
+        </mesh>
+      </group>
     </group>
   );
-}
+});

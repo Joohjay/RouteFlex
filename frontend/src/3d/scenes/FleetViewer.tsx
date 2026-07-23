@@ -57,7 +57,7 @@ function ViewerContent({ view }: { view: ViewMode }) {
         <TrailerModel />
       </group>
       <group ref={containerRef} position={[2.5, 0, 0]}>
-        <ContainerModel open />
+        <ContainerModel />
       </group>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
         <planeGeometry args={[10, 8]} />
