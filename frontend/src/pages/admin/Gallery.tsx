@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Image } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/Dialog';
 import { Loading } from '@/components/common/Loading';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { api } from '@/lib/api';
 import { toast } from 'sonner';
 import type { Gallery } from '@/types';
@@ -26,7 +27,7 @@ export default function GalleryAdmin() {
     category: '',
   });
 
-  const { data: gallery, isLoading } = useQuery<Gallery[]>({
+  const { data: gallery, isLoading, isError } = useQuery<Gallery[]>({
     queryKey: ['admin', 'gallery'],
     queryFn: async () => {
       const response = await api.get('/gallery');
@@ -64,6 +65,21 @@ export default function GalleryAdmin() {
   if (isLoading) {
     return <Loading className="min-h-[60vh]" />;
   }
+
+  if (isError) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-3xl font-bold">Gallery</h1>
+        <EmptyState
+          icon={Image}
+          title="Failed to load gallery"
+          description="Could not connect to the server. Please try again later."
+        />
+      </div>
+    );
+  }
+
+  const isEmpty = !gallery || gallery.length === 0;
 
   return (
     <div className="space-y-6">
@@ -108,35 +124,43 @@ export default function GalleryAdmin() {
         </Dialog>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {(gallery ?? []).map((item) => (
-          <Card key={item.id} className="overflow-hidden">
-            <img
-              src={item.imageUrl}
-              alt={item.title ?? 'Gallery image'}
-              className="h-48 w-full object-cover"
-            />
-            <CardContent className="pt-4">
-              <div className="flex items-start justify-between">
-                <div>
-                  {item.title && <h3 className="font-semibold">{item.title}</h3>}
-                  {item.category && (
-                    <span className="text-xs text-muted-foreground">{item.category}</span>
-                  )}
+      {isEmpty ? (
+        <EmptyState
+          icon={Image}
+          title="No gallery images"
+          description="Add your first gallery image to showcase your fleet, operations, and team."
+        />
+      ) : (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {gallery!.map((item) => (
+            <Card key={item.id} className="overflow-hidden">
+              <img
+                src={item.imageUrl}
+                alt={item.title ?? 'Gallery image'}
+                className="h-48 w-full object-cover"
+              />
+              <CardContent className="pt-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    {item.title && <h3 className="font-semibold">{item.title}</h3>}
+                    {item.category && (
+                      <span className="text-xs text-muted-foreground">{item.category}</span>
+                    )}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => deleteMutation.mutate(item.id)}
+                    disabled={deleteMutation.isPending}
+                  >
+                    <Trash2 size={16} className="text-destructive" />
+                  </Button>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => deleteMutation.mutate(item.id)}
-                  disabled={deleteMutation.isPending}
-                >
-                  <Trash2 size={16} className="text-destructive" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

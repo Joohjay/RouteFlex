@@ -102,58 +102,98 @@ async function main(): Promise<void> {
     });
   }
 
-  // Seed sample fleet
-  const fleetCount = await prisma.fleet.count({ where: { companyId: company.id } });
-  if (fleetCount === 0) {
-    await prisma.fleet.createMany({
-      data: [
-        // Vans
-        { companyId: company.id, name: 'Standard Cargo Van', type: 'VAN', capacityKg: 1500, description: 'Ideal for small parcels and light cargo within city limits.', features: ['GPS tracking', 'Air conditioning', 'Same-day delivery'] },
-        { companyId: company.id, name: 'Extended Cargo Van', type: 'VAN', capacityKg: 2000, description: 'Spacious van for bulkier city deliveries.', features: ['GPS tracking', 'Rear camera', 'Shelving option'] },
-        { companyId: company.id, name: 'Pickup Truck', type: 'PICKUP', capacityKg: 800, description: 'Compact pickup for quick deliveries and small loads.', features: ['Tailgate lift', 'Tie-downs'] },
+  const baseUrl = config.FRONTEND_URL;
 
-        // Trucks
-        { companyId: company.id, name: '1-Ton Delivery Truck', type: 'TRUCK_1_TON', capacityKg: 1000, description: 'Light-duty truck for local distribution.', features: ['Liftgate', 'GPS tracking'] },
-        { companyId: company.id, name: '3-Ton Box Truck', type: 'TRUCK_3_TON', capacityKg: 3000, description: 'Medium-duty box truck for regional freight.', features: ['Liftgate', 'GPS tracking', 'Insulated option'] },
-        { companyId: company.id, name: '5-Ton Box Truck', type: 'TRUCK_5_TON', capacityKg: 5000, description: 'Versatile medium-duty truck for regional deliveries.', features: ['Liftgate', 'GPS tracking', 'Insulated option'] },
-        { companyId: company.id, name: '10-Ton Flatbed', type: 'TRUCK_10_TON', capacityKg: 10000, description: 'Heavy-duty flatbed for machinery and oversized cargo.', features: ['Winch', 'Tie-downs', 'Wide load capable'] },
-        { companyId: company.id, name: '20-Ton Heavy Truck', type: 'TRUCK_20_TON', capacityKg: 20000, description: 'Maximum payload truck for bulk transport.', features: ['Hydraulic lift', 'GPS tracking', 'Dual axle'] },
-        { companyId: company.id, name: 'Scania Long Haul', type: 'TRUCK_10_TON', capacityKg: 12000, description: 'Scania long-haul truck for intercity freight.', features: ['Sleeper cab', 'Cruise control', 'GPS tracking'] },
-        { companyId: company.id, name: 'Volvo Heavy Duty', type: 'TRUCK_20_TON', capacityKg: 22000, description: 'Volvo heavy-duty truck for demanding routes.', features: ['I-Shift', 'LED lighting', 'Climate control'] },
-        { companyId: company.id, name: 'Mercedes Actros', type: 'TRUCK_20_TON', capacityKg: 25000, description: 'Mercedes Actros for premium long-haul transport.', features: ['MirrorCam', 'Active Brake Assist', 'Predictive cruise'] },
-        { companyId: company.id, name: 'IVECO Stralis', type: 'TRUCK_10_TON', capacityKg: 14000, description: 'IVECO Stralis for efficient regional distribution.', features: ['ECO mode', 'Air suspension', 'Telematics'] },
-        { companyId: company.id, name: 'Mitsubishi Fuso Canter', type: 'TRUCK_3_TON', capacityKg: 3500, description: 'Compact Canter for urban deliveries with tight access.', features: ['Tight turning radius', 'Low entry', 'Dual airbags'] },
-        { companyId: company.id, name: 'FAW Heavy Truck', type: 'TRUCK_20_TON', capacityKg: 26000, description: 'FAW heavy truck for bulk cargo transport.', features: ['6x4 drive', 'Air conditioning', 'Power steering'] },
-        { companyId: company.id, name: 'HOWO Tipper Truck', type: 'TRUCK_20_TON', capacityKg: 28000, description: 'HOWO tipper for construction and mining materials.', features: ['Hydraulic tipper', 'Heavy-duty chassis', 'Differential lock'] },
+  // Seed fleet: delete existing and re-create with images
+  await prisma.fleetImage.deleteMany({ where: { fleet: { companyId: company.id } } });
+  await prisma.fleet.deleteMany({ where: { companyId: company.id } });
 
-        // Trailers
-        { companyId: company.id, name: 'Curtain Side Trailer', type: 'TRAILER', capacityKg: 24000, description: 'Versatile curtain-side trailer for side loading.', features: ['Curtain walls', 'Tie-down rails', 'Anti-theft'] },
-        { companyId: company.id, name: 'Enclosed Box Trailer', type: 'TRAILER', capacityKg: 22000, description: 'Fully enclosed trailer for secure cargo transport.', features: ['Rear ramp', 'Interior lighting', 'Ventilation'] },
-        { companyId: company.id, name: 'Interlink Trailer', type: 'TRAILER', capacityKg: 34000, description: 'Interlink trailer for maximum volume capacity.', features: ['Double axle', 'Air brakes', 'ABS'] },
-        { companyId: company.id, name: 'Flatbed Semi-Trailer', type: 'TRAILER', capacityKg: 26000, description: 'Standard flatbed semi-trailer for general freight.', features: ['Removable sides', 'Tie-down points'] },
-        { companyId: company.id, name: 'Dump Trailer', type: 'TRAILER', capacityKg: 20000, description: 'Dump trailer for loose materials and aggregates.', features: ['Hydraulic dump', 'High sides', 'Tailgate'] },
-        { companyId: company.id, name: 'Van Box Trailer', type: 'TRAILER', capacityKg: 18000, description: 'Van body trailer for dry goods transport.', features: ['Roll-up door', 'E-track', 'LED lights'] },
-        { companyId: company.id, name: 'Conestoga Trailer', type: 'TRAILER', capacityKg: 22000, description: 'Conestoga trailer with retractable tarp system.', features: ['Rolling tarp', 'Side access', 'Weatherproof'] },
-        { companyId: company.id, name: 'Roller-Bed Trailer', type: 'TRAILER', capacityKg: 20000, description: 'Roller-bed trailer for easy loading and unloading.', features: ['Roller system', 'Winch', 'Brake control'] },
+  const fleetData = [
+    { name: 'JJ City Runner', type: 'VAN' as const, capacityKg: 1500, image: '/images/fleet/van.jpg' },
+    { name: 'JJ Metro Mover', type: 'VAN' as const, capacityKg: 1800, image: '/images/fleet/van 2.jpg' },
+    { name: 'JJ Urban Express', type: 'VAN' as const, capacityKg: 2000, image: '/images/fleet/van 3.jpg' },
+    { name: 'JJ Compact Hauler', type: 'PICKUP' as const, capacityKg: 800, image: '/images/fleet/van-1.jpg' },
 
-        // Flatbeds
-        { companyId: company.id, name: '40ft Flatbed Trailer', type: 'FLATBED', capacityKg: 26000, description: 'Standard 40ft flatbed for construction materials.', features: ['Wood deck', 'Stake pockets', 'Reflective tape'] },
-        { companyId: company.id, name: '53ft Flatbed Trailer', type: 'FLATBED', capacityKg: 28000, description: 'Extra-long flatbed for oversized cargo.', features: ['Steel deck', 'Winch tracks', 'LED lighting'] },
-        { companyId: company.id, name: 'Container Flatbed', type: 'FLATBED', capacityKg: 30000, description: 'Flatbed with container twist-locks for container transport.', features: ['Twist locks', 'Tandem axle', 'Air ride'] },
-        { companyId: company.id, name: 'Low Flatbed Trailer', type: 'FLATBED', capacityKg: 32000, description: 'Low-profile flatbed for tall machinery.', features: ['Drop deck', 'Ramps', 'Toolbox'] },
-        { companyId: company.id, name: 'Flatbed with Coil Well', type: 'FLATBED', capacityKg: 28000, description: 'Flatbed with steel coil well for coiled materials.', features: ['Coil well', 'Wood lining', 'Tie-downs'] },
+    { name: 'JJ Road King', type: 'TRUCK_5_TON' as const, capacityKg: 5000, image: '/images/fleet/Truck 1.jpg' },
+    { name: 'JJ Freight Master', type: 'TRUCK_10_TON' as const, capacityKg: 10000, image: '/images/fleet/Truck 2.jpg' },
+    { name: 'JJ Cargo Pro', type: 'TRUCK_10_TON' as const, capacityKg: 12000, image: '/images/fleet/Truck 3.jpg' },
+    { name: 'JJ Long Haul', type: 'TRUCK_20_TON' as const, capacityKg: 20000, image: '/images/fleet/Truck 4.jpg' },
+    { name: 'JJ Load Master', type: 'TRUCK_20_TON' as const, capacityKg: 22000, image: '/images/fleet/Truck 5.jpg' },
+    { name: 'JJ Highway Cruiser', type: 'TRUCK_10_TON' as const, capacityKg: 14000, image: '/images/fleet/Truck 6.jpg' },
+    { name: 'JJ Heavy Mover', type: 'TRUCK_20_TON' as const, capacityKg: 25000, image: '/images/fleet/Truck 7.jpg' },
+    { name: 'JJ Transport Pro', type: 'TRUCK_5_TON' as const, capacityKg: 5000, image: '/images/fleet/Truck 8.jpg' },
+    { name: 'JJ Hauler X', type: 'TRUCK_10_TON' as const, capacityKg: 12000, image: '/images/fleet/Truck 9.jpg' },
+    { name: 'JJ Cargo King', type: 'TRUCK_20_TON' as const, capacityKg: 26000, image: '/images/fleet/Truck 10.jpg' },
+    { name: 'JJ Freight Runner', type: 'TRUCK_10_TON' as const, capacityKg: 14000, image: '/images/fleet/Scania 1.jpg' },
+    { name: 'JJ Load Runner', type: 'TRUCK_20_TON' as const, capacityKg: 25000, image: '/images/fleet/SCANIA.jpg' },
+    { name: 'Scania Long Haul', type: 'TRUCK_10_TON' as const, capacityKg: 12000, image: '/images/fleet/Scania 1.jpg' },
+    { name: 'Volvo Heavy Duty', type: 'TRUCK_20_TON' as const, capacityKg: 22000, image: '/images/fleet/VOLVO.jpg' },
+    { name: 'Mercedes Actros', type: 'TRUCK_20_TON' as const, capacityKg: 25000, image: '/images/fleet/Mercedez Altros.jpg' },
+    { name: 'IVECO Stralis', type: 'TRUCK_10_TON' as const, capacityKg: 14000, image: '/images/fleet/IVECO.jpg' },
+    { name: 'Mitsubishi Fuso Canter', type: 'TRUCK_3_TON' as const, capacityKg: 3500, image: '/images/fleet/2014 Mitsubishi Fuso Canter TKG-FEB80.jpg' },
+    { name: 'FAW Heavy Truck', type: 'TRUCK_20_TON' as const, capacityKg: 26000, image: '/images/fleet/FAW truck (2).jpg' },
+    { name: 'HOWO Tipper Truck', type: 'TRUCK_20_TON' as const, capacityKg: 28000, image: '/images/fleet/HOWO 380 CV camion benne 6x4 - Camion HOWO.jpg' },
 
-        // Refrigerated
-        { companyId: company.id, name: 'Refrigerated Truck', type: 'REFRIGERATED', capacityKg: 8000, description: 'Temperature-controlled truck for perishable goods.', features: ['Temperature monitoring', 'HACCP compliant', 'Dual zone'] },
-        { companyId: company.id, name: 'Refrigerated Trailer', type: 'REFRIGERATED', capacityKg: 24000, description: 'Large reefer trailer for frozen and chilled cargo.', features: ['Thermo King unit', 'Data logging', 'Remote monitoring'] },
-        { companyId: company.id, name: 'Multi-Temp Refrigerated', type: 'REFRIGERATED', capacityKg: 20000, description: 'Multi-temperature zone trailer for mixed loads.', features: ['3 temperature zones', 'Alarm system', 'Backup unit'] },
+    { name: 'JJ Cargo Carrier', type: 'TRAILER' as const, capacityKg: 24000, image: '/images/fleet/Trailer.jpg' },
+    { name: 'JJ Bulk Mover', type: 'TRAILER' as const, capacityKg: 22000, image: '/images/fleet/Trailer (2).jpg' },
+    { name: 'JJ Secure Trailer', type: 'TRAILER' as const, capacityKg: 26000, image: '/images/fleet/closed trailers.jpg' },
+    { name: 'JJ Curtainsider', type: 'TRAILER' as const, capacityKg: 24000, image: '/images/fleet/Curtainsider Trailers.jpg' },
+    { name: 'JJ Box Trailer', type: 'TRAILER' as const, capacityKg: 18000, image: '/images/fleet/trailer Covers.jpg' },
 
-        // Heavy Haul (LOWBED / TANKER)
-        { companyId: company.id, name: 'Lowbed Heavy Haul', type: 'LOWBED', capacityKg: 45000, description: 'Lowbed trailer for heavy machinery and equipment.', features: ['Hydraulic ramps', 'Multi-axle', 'Load binder'] },
-        { companyId: company.id, name: 'Extendable Lowbed', type: 'LOWBED', capacityKg: 50000, description: 'Extendable lowbed for extra-long heavy loads.', features: ['Hydraulic extension', 'Remote control', 'LED lights'] },
-        { companyId: company.id, name: 'Fuel Tanker', type: 'TANKER', capacityKg: 33000, description: 'Fuel tanker for bulk liquid transport.', features: ['Compartmentalized', 'Grounding system', 'Overflow valve'] },
-        { companyId: company.id, name: 'Water Tanker', type: 'TANKER', capacityKg: 28000, description: 'Water tanker for bulk water delivery.', features: ['Spray nozzle', 'Hose reel', 'Pump system'] },
-      ],
+    { name: 'JJ Flatbed Pro', type: 'FLATBED' as const, capacityKg: 26000, image: '/images/fleet/flatbed.jpg' },
+    { name: 'JJ Open Carrier', type: 'FLATBED' as const, capacityKg: 28000, image: '/images/fleet/flatbed-1.jpg' },
+    { name: 'JJ Heavy Loader', type: 'FLATBED' as const, capacityKg: 32000, image: '/images/fleet/flatbed-2.jpg' },
+    { name: 'JJ Deck Master', type: 'FLATBED' as const, capacityKg: 26000, image: '/images/fleet/flatbed-3.jpg' },
+
+    { name: 'JJ Cold Chain', type: 'REFRIGERATED' as const, capacityKg: 8000, image: '/images/fleet/Refrigerated Truck.jpg' },
+    { name: 'JJ Cool Runner', type: 'REFRIGERATED' as const, capacityKg: 24000, image: '/images/fleet/refrigerated trailer.jpg' },
+    { name: 'JJ Temp Control', type: 'REFRIGERATED' as const, capacityKg: 20000, image: '/images/fleet/refrigerated trailer (2).jpg' },
+    { name: 'JJ Chill Master', type: 'REFRIGERATED' as const, capacityKg: 16000, image: '/images/fleet/refrigirated Truck 1.jpg' },
+
+    { name: 'JJ Heavy King', type: 'LOWBED' as const, capacityKg: 45000, image: '/images/fleet/heavy haul.jpg' },
+    { name: 'JJ Massive Haul', type: 'LOWBED' as const, capacityKg: 50000, image: '/images/fleet/heavy haul scania.jpg' },
+    { name: 'JJ Oversize Pro', type: 'LOWBED' as const, capacityKg: 48000, image: '/images/fleet/heavy.jpg' },
+    { name: 'Fuel Tanker', type: 'TANKER' as const, capacityKg: 33000, image: '/images/fleet/HOWO 380 CV camion benne 6x4 - Camion HOWO.jpg' },
+  ];
+
+  for (const v of fleetData) {
+    await prisma.fleet.create({
+      data: {
+        companyId: company.id,
+        name: v.name,
+        type: v.type,
+        capacityKg: v.capacityKg,
+        status: 'ACTIVE',
+        features: [],
+        images: {
+          create: [{ url: `${baseUrl}${v.image}`, publicId: '', sortOrder: 0 }],
+        },
+      },
+    });
+  }
+
+  // Seed gallery
+  const galleryCount = await prisma.gallery.count({ where: { companyId: company.id } });
+  if (galleryCount === 0) {
+    const galleryItems = [
+      { title: 'Fleet Operations', category: 'FLEET', image: '/images/gallery/gallery-1.jpg' },
+      { title: 'Loading Operations', category: 'OPERATIONS', image: '/images/gallery/gallery-2.jpg' },
+      { title: 'Warehouse Facility', category: 'FACILITY', image: '/images/gallery/gallery-3.jpg' },
+      { title: 'Team at Work', category: 'TEAM', image: '/images/gallery/gallery-4.jpg' },
+      { title: 'Cargo Logistics', category: 'OPERATIONS', image: '/images/gallery/gallery-5.jpg' },
+      { title: 'Fleet Lineup', category: 'FLEET', image: '/images/gallery/gallery-6.jpg' },
+    ];
+
+    await prisma.gallery.createMany({
+      data: galleryItems.map((item, i) => ({
+        companyId: company.id,
+        title: item.title,
+        category: item.category,
+        imageUrl: `${baseUrl}${item.image}`,
+        publicId: '',
+        isActive: true,
+        sortOrder: i,
+      })),
     });
   }
 

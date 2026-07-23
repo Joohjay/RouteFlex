@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
@@ -14,6 +14,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/Dialog';
 import { Loading } from '@/components/common/Loading';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { api } from '@/lib/api';
 import { toast } from 'sonner';
 import type { Fleet } from '@/types';
@@ -51,7 +52,7 @@ export default function FleetAdmin() {
     features: '',
   });
 
-  const { data: fleet, isLoading } = useQuery<Fleet[]>({
+  const { data: fleet, isLoading, isError } = useQuery<Fleet[]>({
     queryKey: ['admin', 'fleet'],
     queryFn: async () => {
       const response = await api.get('/fleet');
@@ -93,6 +94,21 @@ export default function FleetAdmin() {
   if (isLoading) {
     return <Loading className="min-h-[60vh]" />;
   }
+
+  if (isError) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-3xl font-bold">Fleet</h1>
+        <EmptyState
+          icon={Truck}
+          title="Failed to load fleet"
+          description="Could not connect to the server. Please try again later."
+        />
+      </div>
+    );
+  }
+
+  const isEmpty = !fleet || fleet.length === 0;
 
   return (
     <div className="space-y-6">
@@ -148,50 +164,58 @@ export default function FleetAdmin() {
         </Dialog>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>All Vehicles</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b">
-                  <th className="py-3 text-left font-medium">Name</th>
-                  <th className="py-3 text-left font-medium">Type</th>
-                  <th className="py-3 text-left font-medium">Capacity</th>
-                  <th className="py-3 text-left font-medium">Status</th>
-                  <th className="py-3 text-left font-medium">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(fleet ?? []).map((vehicle) => (
-                  <tr key={vehicle.id} className="border-b last:border-0">
-                    <td className="py-3 font-medium">{vehicle.name}</td>
-                    <td className="py-3">{vehicle.type.replace(/_/g, ' ')}</td>
-                    <td className="py-3">{vehicle.capacityKg.toLocaleString()} kg</td>
-                    <td className="py-3">
-                      <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                        {vehicle.status}
-                      </span>
-                    </td>
-                    <td className="py-3">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => deleteMutation.mutate(vehicle.id)}
-                        disabled={deleteMutation.isPending}
-                      >
-                        <Trash2 size={16} className="text-destructive" />
-                      </Button>
-                    </td>
+      {isEmpty ? (
+        <EmptyState
+          icon={Truck}
+          title="No fleet vehicles"
+          description="Add your first vehicle to start managing your fleet."
+        />
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle>All Vehicles ({fleet!.length})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b">
+                    <th className="py-3 text-left font-medium">Name</th>
+                    <th className="py-3 text-left font-medium">Type</th>
+                    <th className="py-3 text-left font-medium">Capacity</th>
+                    <th className="py-3 text-left font-medium">Status</th>
+                    <th className="py-3 text-left font-medium">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+                </thead>
+                <tbody>
+                  {fleet!.map((vehicle) => (
+                    <tr key={vehicle.id} className="border-b last:border-0">
+                      <td className="py-3 font-medium">{vehicle.name}</td>
+                      <td className="py-3">{vehicle.type.replace(/_/g, ' ')}</td>
+                      <td className="py-3">{vehicle.capacityKg.toLocaleString()} kg</td>
+                      <td className="py-3">
+                        <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                          {vehicle.status}
+                        </span>
+                      </td>
+                      <td className="py-3">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => deleteMutation.mutate(vehicle.id)}
+                          disabled={deleteMutation.isPending}
+                        >
+                          <Trash2 size={16} className="text-destructive" />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
