@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -8,8 +8,6 @@ import type { AxiosError } from 'axios';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Loading } from '@/components/common/Loading';
-import { LoginCinematic } from '@/animations/cinematic';
-import type { LoginCinematicHandle } from '@/animations/cinematic/LoginCinematic';
 import { useAuthStore } from '@/stores/authStore';
 import { api, type ApiResponse } from '@/lib/api';
 import { toast } from 'sonner';
@@ -26,9 +24,6 @@ export default function Login() {
   const { user, isLoading: authLoading, setAuth } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [cinematicComplete, setCinematicComplete] = useState(false);
-  const [isExiting, setIsExiting] = useState(false);
-  const cinematicRef = useRef<LoginCinematicHandle | null>(null);
 
   const {
     register,
@@ -59,11 +54,6 @@ export default function Login() {
       const { tokens, user } = response.data.data;
       setAuth(tokens.accessToken, tokens.refreshToken, user);
       toast.success('Welcome back!');
-
-      if (cinematicRef.current) {
-        setIsExiting(true);
-        await cinematicRef.current.playExit();
-      }
       navigate('/admin', { replace: true });
     } catch (err) {
       const error = err as AxiosError<ApiResponse<null>>;
@@ -74,54 +64,42 @@ export default function Login() {
     }
   };
 
-  const formContent = (
-    <div className="w-full max-w-md rounded-2xl border bg-card p-8 shadow-lg">
-      <div className="flex flex-col items-center">
-        <h1 className="mt-4 text-2xl font-bold">JJ Transport Admin</h1>
-        <p className="text-sm text-muted-foreground">Sign in to manage your logistics platform</p>
-      </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
-        <div>
-          <label className="block text-sm font-medium">Email</label>
-          <Input type="email" {...register('email')} className="mt-1" />
-          {errors.email && <p className="mt-1 text-sm text-destructive">{errors.email.message}</p>}
-        </div>
-        <div>
-          <label className="block text-sm font-medium">Password</label>
-          <div className="relative mt-1">
-            <Input type={showPassword ? 'text' : 'password'} {...register('password')} className="pr-10" />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              tabIndex={-1}
-            >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
-          {errors.password && (
-            <p className="mt-1 text-sm text-destructive">{errors.password.message}</p>
-          )}
-        </div>
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? <Loader2 size={18} className="mr-2 animate-spin" /> : null}
-          Sign In
-        </Button>
-      </form>
-    </div>
-  );
-
-  if (!cinematicComplete && !isExiting) {
-    return (
-      <LoginCinematic ref={cinematicRef} onComplete={() => setCinematicComplete(true)}>
-        {formContent}
-      </LoginCinematic>
-    );
-  }
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
-      {formContent}
+      <div className="w-full max-w-md rounded-2xl border bg-card p-8 shadow-lg">
+        <div className="flex flex-col items-center">
+          <h1 className="mt-4 text-2xl font-bold">JJ Transport Admin</h1>
+          <p className="text-sm text-muted-foreground">Sign in to manage your logistics platform</p>
+        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
+          <div>
+            <label className="block text-sm font-medium">Email</label>
+            <Input type="email" {...register('email')} className="mt-1" />
+            {errors.email && <p className="mt-1 text-sm text-destructive">{errors.email.message}</p>}
+          </div>
+          <div>
+            <label className="block text-sm font-medium">Password</label>
+            <div className="relative mt-1">
+              <Input type={showPassword ? 'text' : 'password'} {...register('password')} className="pr-10" />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+            {errors.password && (
+              <p className="mt-1 text-sm text-destructive">{errors.password.message}</p>
+            )}
+          </div>
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? <Loader2 size={18} className="mr-2 animate-spin" /> : null}
+            Sign In
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }
