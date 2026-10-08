@@ -8,7 +8,6 @@ import { AnimatedSection, AnimatedHero, AnimatedHeroItem } from '@/animations';
 import { PremiumCard } from '@/components/premium';
 import { images } from '@/lib/images';
 import { cn } from '@/lib/utils';
-import { FleetViewer } from '@/3d/scenes/FleetViewer';
 
 type ImageGroup = 'VAN' | 'TRUCK' | 'TRAILER' | 'FLATBED' | 'REFRIGERATED' | 'HEAVY';
 type FilterGroup = 'ALL' | ImageGroup;
@@ -197,13 +196,6 @@ export default function Fleet() {
           </AnimatedHero>
         </div>
       </section>
-
-      {/* 3D Viewer */}
-      <AnimatedSection className="py-12">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <FleetViewer />
-        </div>
-      </AnimatedSection>
 
       {/* Filters */}
       <AnimatedSection className="sticky top-20 z-30 border-b bg-white/80 py-5 backdrop-blur-xl dark:bg-gray-950/80">
